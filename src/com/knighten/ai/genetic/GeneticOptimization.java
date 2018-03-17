@@ -1,5 +1,8 @@
 package com.knighten.ai.genetic;
 
+import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
+import com.knighten.ai.genetic.stringmatch.StringMatchProblem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,50 +11,57 @@ public class GeneticOptimization {
 
     private IGenOptimizeProblem problem;
     private int maxGenerations;
+    private double selectionPercent;
+    private double mutationProb;
 
-    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations){
+    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations, double selectionPercent, double mutationProb){
         this.problem = problem;
         this.maxGenerations = maxGenerations;
+        this.selectionPercent = selectionPercent;
+        this.mutationProb = mutationProb;
     }
 
     public List<Individual> optimize(){
 
         // Generate Initial Population //
-        problem.generateInitialPopulation();
+        List<Individual> population = problem.generateInitialPopulation();
 
         // Population Fitness //
-        problem.calculateFitness();
+        problem.calculateFitness(population);
 
         // Store Best Individual For Each Generation //
         List<Individual> generations = new ArrayList<>();
-        generations.add(problem.getBestIndividual());
+        generations.add(problem.getBestIndividual(population));
 
         // Generations //
         for(int i=0; i<maxGenerations; i++){
 
             // Selection //
-            problem.selection();
+            List<Individual> selectedPopulation = problem.selection(population, selectionPercent);
 
             // Cross Over //
-            problem.crossover();
+            List<Individual> crossedPopulation = problem.crossover(selectedPopulation);
 
             // Mutation //
-            problem.mutate();
+            problem.mutate(crossedPopulation, mutationProb);
 
             // Population Fitness //
-            problem.calculateFitness();
+            problem.calculateFitness(crossedPopulation);
 
-            Individual topIndividual = problem.getBestIndividual();
+            Individual topIndividual = problem.getBestIndividual(crossedPopulation);
             generations.add(topIndividual);
 
+            population = crossedPopulation;
 
-            if(problem.getBestIndividual().getFitness() == 0.0)
+            //TODO - Make Stopping Condition More Flexible
+            if(topIndividual.getFitness() == 0.0)
                 break;
         }
 
         return generations;
 
     }
+
 
 
 }

@@ -1,11 +1,13 @@
 package com.knighten.ai.genetic;
 
+//TODO - Update Javadocs
+
 /**
- * Represents an individual of the population used in the genetic optimization algorithm.
+ * Represents an individual in the population used in the genetic optimization algorithm.
  *
- * @param <T> represents the value stored in the individual
+ * @param <V> represents the type of value stored in the individual
  */
-public class Individual<T> implements Comparable<Individual> {
+public class Individual<V> implements Comparable<Individual> {
 
     /**
      * The fitness score of the individual.
@@ -15,7 +17,7 @@ public class Individual<T> implements Comparable<Individual> {
     /**
      * The value of the individual.
      */
-    private T value;
+    private V value;
 
     /**
      * Gets the assigned fitness score for the individual.
@@ -25,26 +27,26 @@ public class Individual<T> implements Comparable<Individual> {
     public double getFitness(){ return this.fitness; }
 
     /**
-     * Assigns a value to the individual's fitness score.
+     * Assigns a fitness score to the individual.
      *
      * @param fitness the individual's calculated fitness score
      */
     public void setFitness(double fitness){ this.fitness = fitness; }
 
     /**
-     * Gets the individuals value. An individual's value is used to calculate
+     * Gets the value of the individual. An individual's value is used to calculate
      * its fitness score.
      *
      * @return the individual's value
      */
-     public T getValue(){ return this.value; }
+     public V getValue(){ return this.value; }
 
     /**
-     * Assigns the individual's its value.
+     * Assigns a value to the individual.
      *
      * @param value the individual's value
      */
-     public void setValue(T value){ this.value = value; }
+     public void setValue(V value){ this.value = value; }
 
     /**
      * Compares the current individual to another individual.
@@ -62,4 +64,5 @@ public class Individual<T> implements Comparable<Individual> {
 
         return 0;
     }
+
 }

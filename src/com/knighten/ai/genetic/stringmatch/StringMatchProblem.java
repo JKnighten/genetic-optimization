@@ -1,37 +1,43 @@
-package com.knighten.ai.genetic;
+package com.knighten.ai.genetic.stringmatch;
+
+import com.knighten.ai.genetic.GeneticOptimization;
+import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
+import com.knighten.ai.genetic.Individual;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class StringMatchProblem implements IGenOptimizeProblem {
+public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProblem.StringIndividual> {
 
     private ArrayList<StringIndividual> population;
 
     private String targetString;
     private int populationSize;
-    private  double selectionPercent;
-    private  double mutationPercent;
 
-    public StringMatchProblem(String targetString, int populationSize, double selectionPercent, double mutationPercent){
+    public StringMatchProblem(String targetString, int populationSize){
         this.targetString = targetString;
         this.populationSize = populationSize;
-        this.selectionPercent = selectionPercent;
-        this.mutationPercent = mutationPercent;
     }
 
 
     @Override
-    public void generateInitialPopulation() {
+    public List<StringMatchProblem.StringIndividual> generateInitialPopulation() {
         population = new ArrayList<>();
 
-        for(int i=0; i<populationSize; i++)
+        List<StringMatchProblem.StringIndividual> initialPopulation = new ArrayList<>();
+
+        for(int i=0; i<populationSize; i++) {
             population.add(new StringIndividual(RandomTextHelper.generateString(targetString.length())));
+            initialPopulation.add(new StringIndividual(RandomTextHelper.generateString(targetString.length())));
+        }
+
+        return initialPopulation;
     }
 
     @Override
-    public void calculateFitness() {
+    public void calculateFitness(List<StringMatchProblem.StringIndividual> population) {
 
         for(StringIndividual individual: population) {
 
@@ -46,25 +52,27 @@ public class StringMatchProblem implements IGenOptimizeProblem {
     }
 
     @Override
-    public Individual getBestIndividual() {
+    public StringMatchProblem.StringIndividual getBestIndividual(List<StringIndividual> population) {
         return Collections.min(population);
     }
 
     @Override
-    public void selection() {
-        int howManyToRemove = (int) Math.floor(selectionPercent * populationSize);
+    public List<StringMatchProblem.StringIndividual> selection(List<StringMatchProblem.StringIndividual> population, double selectionPercent) {
+        int howManyToRemove = (int) Math.floor((1-selectionPercent) * populationSize);
+        List<StringMatchProblem.StringIndividual> selectedPopulation = new ArrayList<>(population);
         for(int i=populationSize-1; i> (populationSize-howManyToRemove-1); i--)
-            population.remove(i);
+            selectedPopulation.remove(i);
 
+        return selectedPopulation;
     }
 
     @Override
-    public void crossover() {
+    public List<StringMatchProblem.StringIndividual> crossover(List<StringMatchProblem.StringIndividual> selectedPopulation) {
         ArrayList<StringIndividual> newPopulation = new ArrayList<>();
         Random random = new Random();
         for(int i=0; i<populationSize; i++){
-            StringIndividual individual1 = population.get(random.nextInt(population.size()));
-            StringIndividual individual2 = population.get(random.nextInt(population.size()));
+            StringIndividual individual1 = selectedPopulation.get(random.nextInt(selectedPopulation.size()));
+            StringIndividual individual2 = selectedPopulation.get(random.nextInt(selectedPopulation.size()));
 
             int crossOverPoint = random.nextInt(targetString.length());
             String half1 = individual1.getValue().substring(0, crossOverPoint);
@@ -74,11 +82,11 @@ public class StringMatchProblem implements IGenOptimizeProblem {
             newPopulation.add(crossedIndividual);
         }
 
-        population = newPopulation;
+        return newPopulation;
     }
 
     @Override
-    public void mutate() {
+    public void mutate(List<StringMatchProblem.StringIndividual> population, double mutationProb) {
 
         Random random = new Random();
 
@@ -90,7 +98,7 @@ public class StringMatchProblem implements IGenOptimizeProblem {
 
 
             for(int i=0; i<targetString.length(); i++)
-                if(random.nextDouble() < mutationPercent)
+                if(random.nextDouble() < mutationProb)
                     charArray[i] = RandomTextHelper.generateChar();
 
             String mutatedValue = new String(charArray);
@@ -103,7 +111,7 @@ public class StringMatchProblem implements IGenOptimizeProblem {
 
 
 
-    private class StringIndividual extends Individual<String> {
+    public class StringIndividual extends Individual<String> {
 
         public StringIndividual(String stringValue){
             this.setValue(stringValue);
@@ -119,15 +127,14 @@ public class StringMatchProblem implements IGenOptimizeProblem {
         // Genetic Optimization Parameters //
         int maxGenerations = 2000;
         int populationSize = 1000;
-        double selectionPercent = 0.8;
+        double selectionPercent = 0.2;
         double mutationPercent = 0.01;
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new StringMatchProblem("Chris mims is pew pew", populationSize,
-                selectionPercent, mutationPercent);
+        IGenOptimizeProblem<StringIndividual> problem = new StringMatchProblem("Chris mims is pew pew", populationSize);
 
-        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations);
+        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, selectionPercent, mutationPercent);
         long startTime = System.nanoTime();
         List<Individual> optimizationGeneration = optimizer.optimize();
         long endTime = System.nanoTime();
