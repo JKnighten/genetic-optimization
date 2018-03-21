@@ -9,75 +9,117 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents the string matching problem to be solved by genetic optimization. Starting with random strings
+ * attempt to generate the target string.
+ */
 public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProblem.StringIndividual> {
 
-    private ArrayList<StringIndividual> population;
-
+    /**
+     * The target string that the genetic algorithm is trying to generate.
+     */
     private String targetString;
-    private int populationSize;
 
-    public StringMatchProblem(String targetString, int populationSize){
+    /**
+     * Creates a instance of StringMatchProblem containing the target string trying to be obtained.
+     *
+     * @param targetString the string trying to be found by the genetic algorithm
+     */
+    public StringMatchProblem(String targetString){
         this.targetString = targetString;
-        this.populationSize = populationSize;
     }
 
-
+    /**
+     * Creates a population of random StringIndividuals. This is a collection of random strings
+     * created using RandomTextHelper.
+     *
+     * @param populationSize the size of the population to be created
+     * @return the initial random population of StringIndividual
+     */
     @Override
-    public List<StringMatchProblem.StringIndividual> generateInitialPopulation() {
-        population = new ArrayList<>();
-
+    public List<StringIndividual> generateInitialPopulation(int populationSize) {
         List<StringMatchProblem.StringIndividual> initialPopulation = new ArrayList<>();
-
-        for(int i=0; i<populationSize; i++) {
-            population.add(new StringIndividual(RandomTextHelper.generateString(targetString.length())));
+        for(int i=0; i<populationSize; i++)
             initialPopulation.add(new StringIndividual(RandomTextHelper.generateString(targetString.length())));
-        }
 
         return initialPopulation;
     }
 
+    /**
+     * Calculates fitness for each individual in the population. For the StringMatchProblem fitness is calculated
+     * by finding the sum of the absolute differences between the characters in the individual's string and the target
+     * string. The difference is defined by the distance using the unicode integer representation of the characters.
+     *
+     * @param population the population of individuals whose fitness scores are to be set
+     */
     @Override
-    public void calculateFitness(List<StringMatchProblem.StringIndividual> population) {
-
+    public void calculateFitness(List<StringIndividual> population) {
         for(StringIndividual individual: population) {
-
-            double fitness = 0;
+            double fitness = 0.0;
             for(int i=0; i<individual.getValue().length(); i++)
                 fitness += Math.abs(individual.getValue().charAt(i) - targetString.charAt(i));
-            individual.setFitness(fitness);
 
+            individual.setFitness(fitness);
         }
 
+        // This sort makes selection() and getBestIndividual() simpler
         Collections.sort(population);
     }
 
+    /**
+     * Gets the best individual in the population. In this case the individual with the lowest fitness score, which
+     * is the individual that is most similar to the target string.
+     *
+     * @param population the population used to search for the best individual
+     * @return the StringIndividual with the lowest fitness
+     */
     @Override
-    public StringMatchProblem.StringIndividual getBestIndividual(List<StringIndividual> population) {
-        return Collections.min(population);
+    public StringIndividual getBestIndividual(List<StringIndividual> population) {
+        return population.get(0);
     }
 
+    /**
+     * Selects the selectionPercent percent of best StringIndividuals in the population. The best StringIndividuals are
+     * the ones with the lowest fitness score, which those closest to the target string.
+     *
+     * @param population the population that is the sub-population is selected from
+     * @param selectionPercent the percent of best individuals to keep
+     * @return the sub-population of best StringIndividuals
+     */
     @Override
-    public List<StringMatchProblem.StringIndividual> selection(List<StringMatchProblem.StringIndividual> population, double selectionPercent) {
-        int howManyToRemove = (int) Math.floor((1-selectionPercent) * populationSize);
+    public List<StringIndividual> selection(List<StringIndividual> population, double selectionPercent) {
+        int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
+
+        // Return a modified copy of the original population
         List<StringMatchProblem.StringIndividual> selectedPopulation = new ArrayList<>(population);
-        for(int i=populationSize-1; i> (populationSize-howManyToRemove-1); i--)
+        for(int i=population.size()-1; i>(population.size()-amountToRemove-1); i--)
             selectedPopulation.remove(i);
 
         return selectedPopulation;
     }
 
+    /**
+     * Creates a new population of StringIndividuals by crossing StringIndividuals in the supplied sub-population. Two
+     * StringIndividuals are randomly selected, then portions of their strings are swapped to create a new
+     * StringIndividual.
+     *
+     * @param subPopulation the sub-population used to generate the new population
+     * @param populationSize the desired population size to be returned
+     * @return the new population of StringIndividual created from the sub-population
+     */
     @Override
-    public List<StringMatchProblem.StringIndividual> crossover(List<StringMatchProblem.StringIndividual> selectedPopulation) {
-        ArrayList<StringIndividual> newPopulation = new ArrayList<>();
+    public List<StringIndividual> crossover(List<StringIndividual> subPopulation, int populationSize) {
         Random random = new Random();
+
+        ArrayList<StringIndividual> newPopulation = new ArrayList<>();
         for(int i=0; i<populationSize; i++){
-            StringIndividual individual1 = selectedPopulation.get(random.nextInt(selectedPopulation.size()));
-            StringIndividual individual2 = selectedPopulation.get(random.nextInt(selectedPopulation.size()));
+            StringIndividual individual1 = subPopulation.get(random.nextInt(subPopulation.size()));
+            StringIndividual individual2 = subPopulation.get(random.nextInt(subPopulation.size()));
 
             int crossOverPoint = random.nextInt(targetString.length());
-            String half1 = individual1.getValue().substring(0, crossOverPoint);
-            String half2 = individual2.getValue().substring(crossOverPoint);
-            StringIndividual crossedIndividual = new StringIndividual( half1 + half2);
+            String leftHalf = individual1.getValue().substring(0, crossOverPoint);
+            String rightHalf = individual2.getValue().substring(crossOverPoint);
+            StringIndividual crossedIndividual = new StringIndividual( leftHalf + rightHalf);
 
             newPopulation.add(crossedIndividual);
         }
@@ -85,43 +127,61 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
         return newPopulation;
     }
 
+    /**
+     * Mutates the StringIndividuals in a population. There is a mutationProb percent chance that a character in a
+     * StringIndividual's string will be mutated. If a character is selected for mutation then that character is
+     * replaced by a randomly selected character.
+     *
+     * @param population the population that will be mutated
+     * @param mutationProb the probability that a gene of an individual is mutated
+     */
     @Override
-    public void mutate(List<StringMatchProblem.StringIndividual> population, double mutationProb) {
-
+    public void mutate(List<StringIndividual> population, double mutationProb) {
         Random random = new Random();
 
-        for(int j=0; j< populationSize; j++) {
+        for(StringIndividual individual: population){
+            char[] valAsCharArray = individual.getValue().toCharArray();
 
-            StringIndividual current = population.get(j);
-
-            char[] charArray = current.getValue().toCharArray();
-
-
-            for(int i=0; i<targetString.length(); i++)
+            // Possible for character to be replaced with same character
+            for(int i=0; i<valAsCharArray.length; i++)
                 if(random.nextDouble() < mutationProb)
-                    charArray[i] = RandomTextHelper.generateChar();
+                    valAsCharArray[i] = RandomTextHelper.generateChar();
 
-            String mutatedValue = new String(charArray);
-            StringIndividual mutatedIndividual = new StringIndividual(mutatedValue);
-
-            population.set(j, mutatedIndividual);
+            String mutatedString = new String(valAsCharArray);
+            individual.setValue(mutatedString);
         }
     }
 
-
-
-
+    /**
+     * Represents an individual in the string matching problem. Stores a string and a fitness score.
+     */
     public class StringIndividual extends Individual<String> {
 
+        /**
+         * Creates a individual for the string matching problem. Stores the supplied string as its value.
+         *
+         * @param stringValue the string contained in the individual
+         */
         public StringIndividual(String stringValue){
             this.setValue(stringValue);
         }
 
+        /**
+         * Returns the string representation of the individuals value. Since the individual stores a string as its
+         * value, its value is just returned.
+         *
+         * @return the individuals value
+         */
         @Override
         public String toString(){ return this.getValue(); }
 
     }
 
+    /**
+     * A test execution of the StringMatchProblem.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args){
 
         // Genetic Optimization Parameters //
@@ -130,30 +190,31 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
         double selectionPercent = 0.2;
         double mutationPercent = 0.01;
 
-
         // Setup Problem //
-        IGenOptimizeProblem<StringIndividual> problem = new StringMatchProblem("Chris mims is pew pew", populationSize);
+        IGenOptimizeProblem<StringIndividual> problem = new StringMatchProblem("Hello String Matching");
 
-        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, selectionPercent, mutationPercent);
+        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, populationSize,
+                selectionPercent, mutationPercent);
+
+        // Run Optimization //
         long startTime = System.nanoTime();
-        List<Individual> optimizationGeneration = optimizer.optimize();
+        List<Individual> optimizationGenerations = optimizer.optimize();
         long endTime = System.nanoTime();
-
-        for(int i=1; i<optimizationGeneration.size(); i++) {
-            if(optimizationGeneration.get(i).getFitness() < optimizationGeneration.get(i-1).getFitness() ){
-                String individualString = optimizationGeneration.get(i).toString();
-                double fitness = optimizationGeneration.get(i).getFitness();
-                System.out.println("Generation " + i + ": \n" + individualString + " Score - " + fitness);
-            }
-        }
 
         double duration = (endTime - startTime)/1000000.0;
 
+        // Print Results
+        for(int i=1; i<optimizationGenerations.size(); i++) {
+            if(optimizationGenerations.get(i).getFitness() < optimizationGenerations.get(i-1).getFitness() ){
+                String individualString = optimizationGenerations.get(i).toString();
+                double fitness = optimizationGenerations.get(i).getFitness();
+                System.out.println("Generation " + i + ": - Score " + fitness + "\n" + individualString );
+            }
+        }
+
         System.out.println("Optimization Duration: " + duration + " ms");
-        System.out.println("Generations: " + optimizationGeneration.size());
+        System.out.println("Number of Generations: " + optimizationGenerations.size());
     }
-
-
 
 }
 

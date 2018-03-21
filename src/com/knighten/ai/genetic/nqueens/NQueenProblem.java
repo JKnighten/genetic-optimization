@@ -13,16 +13,14 @@ public class NQueenProblem implements IGenOptimizeProblem<NQueensIndividual> {
 
 
     private int n;
-    private int populationSize;
 
-    public NQueenProblem(int n, int populationSize){
+    public NQueenProblem(int n){
         this.n = n;
-        this.populationSize = populationSize;
     }
 
 
     @Override
-    public List<NQueensIndividual> generateInitialPopulation() {
+    public List<NQueensIndividual> generateInitialPopulation(int populationSize) {
         List<NQueensIndividual> initalPopulation = new ArrayList<>();
 
         Random random = new Random();
@@ -53,21 +51,21 @@ public class NQueenProblem implements IGenOptimizeProblem<NQueensIndividual> {
 
     @Override
     public NQueensIndividual getBestIndividual(List<NQueensIndividual> population) {
-        return Collections.min(population);
+        return population.get(0);
     }
 
     @Override
     public List<NQueensIndividual> selection(List<NQueensIndividual> population, double selectionPercent) {
-        int howManyToRemove = (int) Math.floor((1-selectionPercent) * populationSize);
+        int howManyToRemove = (int) Math.floor((1-selectionPercent) * population.size());
         List<NQueensIndividual> selectedPopulation = new ArrayList<>(population);
-        for(int i=populationSize-1; i> (populationSize-howManyToRemove-1); i--)
+        for(int i=population.size()-1; i> (population.size()-howManyToRemove-1); i--)
             selectedPopulation.remove(i);
 
         return selectedPopulation;
     }
 
     @Override
-    public List<NQueensIndividual> crossover(List<NQueensIndividual> selectedPopulation) {
+    public List<NQueensIndividual> crossover(List<NQueensIndividual> selectedPopulation, int populationSize) {
 
         ArrayList<NQueensIndividual> newPopulation = new ArrayList<>();
         Random random = new Random();
@@ -100,7 +98,7 @@ public class NQueenProblem implements IGenOptimizeProblem<NQueensIndividual> {
 
         Random random = new Random();
 
-        for(int j=0; j< populationSize; j++) {
+        for(int j=0; j< population.size(); j++) {
 
             NQueensIndividual current = population.get(j);
 
@@ -125,9 +123,9 @@ public class NQueenProblem implements IGenOptimizeProblem<NQueensIndividual> {
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new NQueenProblem(32, populationSize);
+        IGenOptimizeProblem problem = new NQueenProblem(32);
 
-        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, selectionPercent, mutationPercent);
+        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, populationSize ,selectionPercent, mutationPercent);
         long startTime = System.nanoTime();
         List<Individual> optimizationGeneration = optimizer.optimize();
         long endTime = System.nanoTime();

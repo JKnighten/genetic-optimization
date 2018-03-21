@@ -13,9 +13,10 @@ public interface IGenOptimizeProblem <T extends Individual> {
     /**
      * Generates an initial population of individuals.
      *
+     * @param populationSize the size of the population to be created
      * @return randomly created population
      */
-    List<T> generateInitialPopulation();
+    List<T> generateInitialPopulation(int populationSize);
 
     /**
      * Calculates the fitness score for every individual in the population. Note: this will set the
@@ -36,8 +37,8 @@ public interface IGenOptimizeProblem <T extends Individual> {
     /**
      * Select individuals in the population that will be used to generate next generation's population.
      *
-     * @param population the population that is culled
-     * @param selectionPercent the percent of  best individuals to keep
+     * @param population the population that is the sub-population is selected from
+     * @param selectionPercent the percent of best individuals to keep
      * @return the sub-population selected from the population
      */
     List<T> selection(List<T> population, double selectionPercent);
@@ -46,9 +47,10 @@ public interface IGenOptimizeProblem <T extends Individual> {
      * Uses the provided sub-population to generate the next  generation's population.
      *
      * @param subPopulation the sub-population used to generate the new population
+     * @param populationSize the desired population size to be returned
      * @return population created from crossing the individuals in the sub-population
      */
-    List<T> crossover(List<T> subPopulation);
+    List<T> crossover(List<T> subPopulation, int populationSize);
 
     /**
      * Randomly mutate individuals in the supplied population. Note: this will change the values

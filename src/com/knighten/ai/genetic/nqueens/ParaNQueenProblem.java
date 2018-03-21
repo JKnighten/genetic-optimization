@@ -16,16 +16,14 @@ public class ParaNQueenProblem implements IGenOptimizeProblem<NQueensIndividual>
 
 
     private int n;
-    private int populationSize;
 
-    public ParaNQueenProblem(int n, int populationSize){
+    public ParaNQueenProblem(int n){
         this.n = n;
-        this.populationSize = populationSize;
     }
 
 
     @Override
-    public List<NQueensIndividual> generateInitialPopulation() {
+    public List<NQueensIndividual> generateInitialPopulation(int populationSize) {
         List<NQueensIndividual > initialPopulation  = IntStream.range(0, populationSize)
                 .parallel()
                 .mapToObj(i -> new NQueensIndividual(randomBoard(n)))
@@ -64,16 +62,16 @@ public class ParaNQueenProblem implements IGenOptimizeProblem<NQueensIndividual>
 
     @Override
     public List<NQueensIndividual> selection(List<NQueensIndividual> population, double selectionPercent) {
-        int howManyToRemove = (int) Math.floor((1-selectionPercent) * populationSize);
+        int howManyToRemove = (int) Math.floor((1-selectionPercent) * population.size());
         List<NQueensIndividual> selectedPopulation = new ArrayList<>(population);
-        for(int i=populationSize-1; i> (populationSize-howManyToRemove-1); i--)
+        for(int i=population.size()-1; i> (population.size()-howManyToRemove-1); i--)
             selectedPopulation.remove(i);
 
         return selectedPopulation;
     }
 
     @Override
-    public List<NQueensIndividual> crossover(List<NQueensIndividual> selectedPopulation) {
+    public List<NQueensIndividual> crossover(List<NQueensIndividual> selectedPopulation, int populationSize) {
 
         List<NQueensIndividual> newPopulation = IntStream.range(0, populationSize)
                 .parallel()
@@ -128,9 +126,9 @@ public class ParaNQueenProblem implements IGenOptimizeProblem<NQueensIndividual>
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new ParaNQueenProblem(64, populationSize);
+        IGenOptimizeProblem problem = new ParaNQueenProblem(64);
 
-        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, selectionPercent, mutationPercent);
+        GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, populationSize, selectionPercent, mutationPercent);
         long startTime = System.nanoTime();
         List<Individual> optimizationGeneration = optimizer.optimize();
         long endTime = System.nanoTime();

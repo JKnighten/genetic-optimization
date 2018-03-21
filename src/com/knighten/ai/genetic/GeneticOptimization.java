@@ -1,7 +1,6 @@
 package com.knighten.ai.genetic;
 
 import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
-import com.knighten.ai.genetic.stringmatch.StringMatchProblem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,18 +12,20 @@ public class GeneticOptimization {
     private int maxGenerations;
     private double selectionPercent;
     private double mutationProb;
+    private int populationSize;
 
-    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations, double selectionPercent, double mutationProb){
+    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations, int populationSize, double selectionPercent, double mutationProb){
         this.problem = problem;
         this.maxGenerations = maxGenerations;
         this.selectionPercent = selectionPercent;
         this.mutationProb = mutationProb;
+        this.populationSize = populationSize;
     }
 
     public List<Individual> optimize(){
 
         // Generate Initial Population //
-        List<Individual> population = problem.generateInitialPopulation();
+        List<Individual> population = problem.generateInitialPopulation(populationSize);
 
         // Population Fitness //
         problem.calculateFitness(population);
@@ -40,7 +41,7 @@ public class GeneticOptimization {
             List<Individual> selectedPopulation = problem.selection(population, selectionPercent);
 
             // Cross Over //
-            List<Individual> crossedPopulation = problem.crossover(selectedPopulation);
+            List<Individual> crossedPopulation = problem.crossover(selectedPopulation, populationSize);
 
             // Mutation //
             problem.mutate(crossedPopulation, mutationProb);
