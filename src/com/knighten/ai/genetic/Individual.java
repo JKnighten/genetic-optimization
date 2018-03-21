@@ -24,14 +24,14 @@ public class Individual<V> implements Comparable<Individual> {
      *
      * @return the individual's fitness score
      */
-    public double getFitness(){ return this.fitness; }
+    public double getFitness() { return this.fitness; }
 
     /**
      * Assigns a fitness score to the individual.
      *
      * @param fitness the individual's calculated fitness score
      */
-    public void setFitness(double fitness){ this.fitness = fitness; }
+    public void setFitness(double fitness) { this.fitness = fitness; }
 
     /**
      * Gets the value of the individual. An individual's value is used to calculate
@@ -39,14 +39,14 @@ public class Individual<V> implements Comparable<Individual> {
      *
      * @return the individual's value
      */
-     public V getValue(){ return this.value; }
+     public V getValue() { return this.value; }
 
     /**
      * Assigns a value to the individual.
      *
      * @param value the individual's value
      */
-     public void setValue(V value){ this.value = value; }
+     public void setValue(V value) { this.value = value; }
 
     /**
      * Compares the current individual to another individual.

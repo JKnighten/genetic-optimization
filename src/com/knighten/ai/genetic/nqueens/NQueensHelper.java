@@ -1,24 +1,31 @@
 package com.knighten.ai.genetic.nqueens;
 
-public class NQueenHelper {
+/**
+ * Helper methods for the n queens problem.
+ */
+public class NQueensHelper {
 
-    public static  double conflictScore(Integer[] board){
-        // Initialize score to 0
-        double score = 0.0;
+    /**
+     * Returns the number of conflicts on the board.
+     *
+     * @param board the board to be evaluated
+     * @return the number on conflicts on the board
+     */
+    public static int conflictScore(Integer[] board) {
+        int score = 0;
 
-        // We Iterate Over Every Queen Starting With The Far Left Queen
         for(int queen = 0; queen < board.length; queen++){
 
-            // We Iterate Over Every Queen In Front Of The Queen Currently Being Evaluated
+            // Iterate Over Every Queen To The Right Of The Queen Currently Being Evaluated
             for(int remainingQueen=queen+1; remainingQueen<board.length; remainingQueen++){
 
-                // Check Row Conflict
+                // Row Conflict
                 if(board[queen] == board[remainingQueen]){
                     score++;
                     continue;
                 }
 
-                // Check Diagonals Conflict
+                // Diagonal(Upper or Lower) Conflict
                 if(Math.abs(board[queen]-board[remainingQueen]) == Math.abs(queen-remainingQueen)) {
                     score++;
                     continue;
@@ -26,10 +33,8 @@ public class NQueenHelper {
 
             }
 
-
         }
 
         return  score;
-
     }
 }

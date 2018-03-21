@@ -37,7 +37,7 @@ public interface IGenOptimizeProblem <T extends Individual> {
     /**
      * Select individuals in the population that will be used to generate next generation's population.
      *
-     * @param population the population that is the sub-population is selected from
+     * @param population the population that the sub-population is selected from
      * @param selectionPercent the percent of best individuals to keep
      * @return the sub-population selected from the population
      */

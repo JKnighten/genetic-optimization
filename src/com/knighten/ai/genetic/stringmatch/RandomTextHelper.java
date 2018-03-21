@@ -19,9 +19,9 @@ public class RandomTextHelper {
      * @param length the length of string to be generated
      * @return a random string
      */
-    public static String generateString(int length){
-        StringBuilder sBuilder = new StringBuilder();
+    public static String generateString(int length) {
         Random random = new Random();
+        StringBuilder sBuilder = new StringBuilder();
 
         for(int i=0; i<length; i++)
             sBuilder.append(validChars.charAt(random.nextInt(validChars.length())));
@@ -34,7 +34,7 @@ public class RandomTextHelper {
      *
      * @return a single random character
      */
-    public static char generateChar(){
+    public static char generateChar() {
         Random random = new Random();
         return validChars.charAt(random.nextInt(validChars.length()));
     }

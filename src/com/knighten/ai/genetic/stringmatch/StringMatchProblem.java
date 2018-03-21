@@ -25,7 +25,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      *
      * @param targetString the string trying to be found by the genetic algorithm
      */
-    public StringMatchProblem(String targetString){
+    StringMatchProblem(String targetString) {
         this.targetString = targetString;
     }
 
@@ -39,7 +39,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
     @Override
     public List<StringIndividual> generateInitialPopulation(int populationSize) {
         List<StringMatchProblem.StringIndividual> initialPopulation = new ArrayList<>();
-        for(int i=0; i<populationSize; i++)
+        while(initialPopulation.size() != populationSize)
             initialPopulation.add(new StringIndividual(RandomTextHelper.generateString(targetString.length())));
 
         return initialPopulation;
@@ -110,9 +110,9 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
     @Override
     public List<StringIndividual> crossover(List<StringIndividual> subPopulation, int populationSize) {
         Random random = new Random();
-
         ArrayList<StringIndividual> newPopulation = new ArrayList<>();
-        for(int i=0; i<populationSize; i++){
+
+        while(newPopulation.size() != populationSize){
             StringIndividual individual1 = subPopulation.get(random.nextInt(subPopulation.size()));
             StringIndividual individual2 = subPopulation.get(random.nextInt(subPopulation.size()));
 
@@ -182,7 +182,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      *
      * @param args command line arguments
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
         int maxGenerations = 2000;
@@ -192,7 +192,6 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
 
         // Setup Problem //
         IGenOptimizeProblem<StringIndividual> problem = new StringMatchProblem("Hello String Matching");
-
         GeneticOptimization optimizer = new GeneticOptimization(problem, maxGenerations, populationSize,
                 selectionPercent, mutationPercent);
 

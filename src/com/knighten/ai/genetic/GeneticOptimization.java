@@ -14,7 +14,8 @@ public class GeneticOptimization {
     private double mutationProb;
     private int populationSize;
 
-    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations, int populationSize, double selectionPercent, double mutationProb){
+    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations, int populationSize,
+                               double selectionPercent, double mutationProb){
         this.problem = problem;
         this.maxGenerations = maxGenerations;
         this.selectionPercent = selectionPercent;
