@@ -5,65 +5,60 @@ import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Performs genetic optimization on a given problems. Problems must implement IGenOptimizeProblem and use individuals
+ * that extend the Individual abstract class.
+ */
 public class GeneticOptimization {
 
+    /**
+     * The problem being optimized.
+     */
+    private IGenOptimizeProblem<Individual> problem;
 
-    private IGenOptimizeProblem problem;
-    private int maxGenerations;
-    private double selectionPercent;
-    private double mutationProb;
-    private int populationSize;
+    /**
+     * Parameters used by the optimizer.
+     */
+    private GeneticOptimizationParams params;
 
-    public GeneticOptimization(IGenOptimizeProblem problem, int maxGenerations, int populationSize,
-                               double selectionPercent, double mutationProb){
+    /**
+     * Creates and instance of GeneticOptimization solving the supplied problems using the supplied parameters.
+     *
+     * @param problem the problem to be optimized
+     * @param params optimization parameters
+     */
+    public GeneticOptimization(IGenOptimizeProblem problem, GeneticOptimizationParams params) {
         this.problem = problem;
-        this.maxGenerations = maxGenerations;
-        this.selectionPercent = selectionPercent;
-        this.mutationProb = mutationProb;
-        this.populationSize = populationSize;
+        this.params = params;
     }
 
+    /**
+     * Starts the optimization process and returns a list of best individuals created.
+     *
+     * @return a list of each top individual in each generation
+     */
     public List<Individual> optimize(){
+        List<Individual> bestInGenerations = new ArrayList<>();
 
-        // Generate Initial Population //
-        List<Individual> population = problem.generateInitialPopulation(populationSize);
-
-        // Population Fitness //
+        List<Individual> population = problem.generateInitialPopulation(params.getPopulationSize());
         problem.calculateFitness(population);
+        bestInGenerations.add(problem.getBestIndividual(population));
 
-        // Store Best Individual For Each Generation //
-        List<Individual> generations = new ArrayList<>();
-        generations.add(problem.getBestIndividual(population));
-
-        // Generations //
-        for(int i=0; i<maxGenerations; i++){
-
-            // Selection //
-            List<Individual> selectedPopulation = problem.selection(population, selectionPercent);
-
-            // Cross Over //
-            List<Individual> crossedPopulation = problem.crossover(selectedPopulation, populationSize);
-
-            // Mutation //
-            problem.mutate(crossedPopulation, mutationProb);
-
-            // Population Fitness //
+        // Start Generations
+        while(bestInGenerations.size()-1 != params.getMaxGenerations()){
+            List<Individual> selectedPopulation = problem.selection(population, params.getSelectionPercent());
+            List<Individual> crossedPopulation = problem.crossover(selectedPopulation, params.getPopulationSize());
+            problem.mutate(crossedPopulation, params.getMutationProb());
             problem.calculateFitness(crossedPopulation);
-
-            Individual topIndividual = problem.getBestIndividual(crossedPopulation);
-            generations.add(topIndividual);
+            bestInGenerations.add(problem.getBestIndividual(crossedPopulation));
 
             population = crossedPopulation;
 
-            //TODO - Make Stopping Condition More Flexible
-            if(topIndividual.getFitness() == 0.0)
-                break;
+            if(bestInGenerations.get(bestInGenerations.size()-1).getFitness() == params.getTargetValue())
+                return bestInGenerations;
         }
 
-        return generations;
-
+        return bestInGenerations;
     }
-
-
 
 }

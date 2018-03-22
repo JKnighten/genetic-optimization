@@ -44,7 +44,7 @@ public interface IGenOptimizeProblem <T extends Individual> {
     List<T> selection(List<T> population, double selectionPercent);
 
     /**
-     * Uses the provided sub-population to generate the next  generation's population.
+     * Uses the provided sub-population to generate the next generation's population.
      *
      * @param subPopulation the sub-population used to generate the new population
      * @param populationSize the desired population size to be returned
@@ -53,7 +53,7 @@ public interface IGenOptimizeProblem <T extends Individual> {
     List<T> crossover(List<T> subPopulation, int populationSize);
 
     /**
-     * Randomly mutate individuals in the supplied population. Note: this will change the values
+     * Randomly mutate individuals in the supplied population. Note: this will change the genes
      * of the individuals in the supplied population.
      *
      * @param population the population that will be mutated

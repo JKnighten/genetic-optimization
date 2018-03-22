@@ -3,15 +3,15 @@ package com.knighten.ai.genetic.stringmatch;
 import java.util.Random;
 
 /**
- * Set of static methods that help generate random strings and characters. Uses a predefined set of characters
- * that be used for selection.
+ * Set of static methods that help generate random strings and characters. Uses a predefined set of characters that be
+ * used for selection.
  */
 public class RandomTextHelper {
 
     /**
      * The set of characters that are used for generating characters and strings.
      */
-    static final String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
+    private static final String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
 
     /**
      * Generates random strings using validChars.

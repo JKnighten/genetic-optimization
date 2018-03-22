@@ -14,13 +14,13 @@ public class NQueensHelper {
     public static int conflictScore(Integer[] board) {
         int score = 0;
 
-        for(int queen = 0; queen < board.length; queen++){
+        for(int queen = 0; queen < board.length; queen++) {
 
             // Iterate Over Every Queen To The Right Of The Queen Currently Being Evaluated
             for(int remainingQueen=queen+1; remainingQueen<board.length; remainingQueen++){
 
                 // Row Conflict
-                if(board[queen] == board[remainingQueen]){
+                if(board[queen] == board[remainingQueen]) {
                     score++;
                     continue;
                 }
