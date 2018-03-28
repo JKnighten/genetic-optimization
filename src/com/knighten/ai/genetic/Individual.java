@@ -5,7 +5,7 @@ package com.knighten.ai.genetic;
  *
  * @param <V> represents the type of genes stored in the individual
  */
-abstract public class Individual<V> implements Comparable<Individual> {
+public class Individual<V> implements Comparable<Individual> {
 
     /**
      * The fitness score of the individual.

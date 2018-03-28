@@ -41,7 +41,7 @@ public class GeneticOptimizationParams {
      * @param selectionPercent percentage of best individuals kept during selection
      * @param mutationProb probability a gene is mutated
      */
-    public GeneticOptimizationParams(int populationSize, int maxGenerations ,double selectionPercent,
+    public GeneticOptimizationParams(int populationSize, int maxGenerations , double selectionPercent,
                                      double mutationProb) {
         this.populationSize = populationSize;
         this.maxGenerations = maxGenerations;
