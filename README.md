@@ -89,6 +89,8 @@ Below are some implemented optimization problems to follow as examples.
 
 ## Implemented Optimization Problems
 
+Each of these problems'  has a demo run implemented as a main method in their associated IGenOptimizeProblem class.
+
 ### String Matching
 
 Starting with random strings, generate a desired target string using these random strings. The initial population will
@@ -111,7 +113,7 @@ large or if N is large.
 ## Possible Future Work
 
 * Early stopping if there is minimal change between generations fitness
-* Optimization Problem - Find largest noo-overlapping circle that can be placed in a finite region that contains other
+* Optimization Problem - Find largest non-overlapping circle that can be placed in a finite region that contains other
  circles
 * Optimization Problem - Find the arrangement of rectangles in a finite area that gives the most free space
 

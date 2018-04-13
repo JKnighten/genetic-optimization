@@ -192,12 +192,12 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
     public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 5000,.05, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(10000, 5000,.05, .01);
         params.setTargetValue(0.0);
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new ParaNQueensProblem(512);
+        IGenOptimizeProblem problem = new ParaNQueensProblem(64);
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //

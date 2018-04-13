@@ -159,11 +159,11 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
     public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
-        GeneticOptimizationParams params = new GeneticOptimizationParams(100,5000, .05, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,5000, .05, .01);
         params.setTargetValue(0.0);
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new NQueensProblem(5);
+        IGenOptimizeProblem problem = new NQueensProblem(64);
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //
