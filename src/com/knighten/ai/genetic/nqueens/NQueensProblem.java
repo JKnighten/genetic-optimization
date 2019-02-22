@@ -163,7 +163,7 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
         params.setTargetValue(0.0);
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new NQueensProblem(64);
+        IGenOptimizeProblem problem = new NQueensProblem(128);
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //

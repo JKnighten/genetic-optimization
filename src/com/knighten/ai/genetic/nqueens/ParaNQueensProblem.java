@@ -197,7 +197,7 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new ParaNQueensProblem(64);
+        IGenOptimizeProblem problem = new ParaNQueensProblem(24);
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //
