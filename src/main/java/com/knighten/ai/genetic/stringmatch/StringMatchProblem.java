@@ -26,7 +26,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      *
      * @param targetString the string trying to be found by the genetic algorithm
      */
-    StringMatchProblem(String targetString) {
+    public StringMatchProblem(String targetString) {
         this.targetString = targetString;
     }
 

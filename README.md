@@ -15,7 +15,6 @@ Execute the follow to generate a jar file of this library:
 
 ```
 ./gradlew jar
-
 ```
 
 The jar file can be found in /build/libs/.
@@ -26,7 +25,6 @@ Execute the follow to generate the javadocs this library:
 
 ```
 ./gradlew javadoc
-
 ```
 
 The javadocs can be found in /out/javadoc/.

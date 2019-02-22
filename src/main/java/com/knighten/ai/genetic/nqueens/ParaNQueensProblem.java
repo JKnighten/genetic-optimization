@@ -28,7 +28,7 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
      *
      * @param n number of queens/board size
      */
-    ParaNQueensProblem(int n) {
+    public ParaNQueensProblem(int n) {
         this.n = n;
     }
 

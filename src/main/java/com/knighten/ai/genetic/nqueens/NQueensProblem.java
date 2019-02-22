@@ -26,7 +26,7 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
      *
      * @param n number of queens/board size
      */
-    NQueensProblem(int n) {
+    public NQueensProblem(int n) {
         this.n = n;
     }
 
@@ -38,7 +38,7 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
      * @return the initial random population of NQueensIndividual
      */
     @Override
-    public List<NQueensIndividual> generateInitialPopulation(int populationSize) {
+    public List<com.knighten.ai.genetic.nqueens.NQueensIndividual> generateInitialPopulation(int populationSize) {
         Random random = new Random();
 
         List<NQueensIndividual> initialPopulation = new ArrayList<>();
