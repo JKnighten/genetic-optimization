@@ -1,4 +1,4 @@
-package com.knighten.ai.genetic.function;
+package com.knighten.ai.genetic.function.realvalue;
 
 import com.knighten.ai.genetic.GeneticOptimization;
 import com.knighten.ai.genetic.GeneticOptimizationParams;
@@ -11,18 +11,18 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class OptimizeFuncProblem implements IGenOptimizeProblem<OneVarFunctionIndividual> {
+public class MinimizeOneVarFunction implements IGenOptimizeProblem<OneVarFunctionIndividual> {
 
     private double minDomain;
     private double maxDomain;
-    private IOneVarRealValuedFunction function;
+    private IOneVariableFunction function;
     private Random random;
 
-    public OptimizeFuncProblem(double minDomain, double maxDomain, IOneVarRealValuedFunction function) {
+    public MinimizeOneVarFunction(double minDomain, double maxDomain, IOneVariableFunction function, Random random) {
         this.minDomain = minDomain;
         this.maxDomain = maxDomain;
         this.function = function;
-        this.random = new Random();
+        this.random = random;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class OptimizeFuncProblem implements IGenOptimizeProblem<OneVarFunctionIn
 
     @Override
     public void calculateFitness(List<OneVarFunctionIndividual> population) {
-        population.stream().forEach(individual -> individual.setFitness(function.findYGivenX(individual.getGenes())));
+        population.stream().forEach(individual -> individual.setFitness(function.getFuncValue(individual.getGenes())));
         Collections.sort(population); // Sort Now To Make selection() More Efficient
     }
 
@@ -81,7 +81,10 @@ public class OptimizeFuncProblem implements IGenOptimizeProblem<OneVarFunctionIn
         params.setTargetValue(0.0);
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new OptimizeFuncProblem(-10.0, 10.0, (x) -> Math.pow(x, 2));
+        IGenOptimizeProblem problem = new MinimizeOneVarFunction(-10.0,
+                10.0,
+                (x) -> Math.pow(x, 2),
+                new Random(123));
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //

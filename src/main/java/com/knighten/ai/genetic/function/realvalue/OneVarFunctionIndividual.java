@@ -1,4 +1,4 @@
-package com.knighten.ai.genetic.function;
+package com.knighten.ai.genetic.function.realvalue;
 
 import com.knighten.ai.genetic.Individual;
 
