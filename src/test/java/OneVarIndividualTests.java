@@ -18,6 +18,10 @@ public class OneVarIndividualTests {
         Assert.assertEquals("1.0", testIndividual.toString());
     }
 
+    ////////////////////////
+    // Parameter Checking //
+    ////////////////////////
+
     @Test(expected = IllegalArgumentException.class)
     public void createInvalidIndividualWithNaN() {
         OneVarIndividual testIndividual = new OneVarIndividual(Double.NaN);

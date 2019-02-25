@@ -22,7 +22,7 @@ public class OneVarIndividual extends Individual<Double>{
 
         // Catch NaN Or Infinity
         if(!Double.isFinite(genes))
-            throw new IllegalArgumentException("genes Cannot Be NaN or Infinite -" + genes + "was found");
+            throw new IllegalArgumentException("genes Cannot Be NaN or Infinite: " + genes + " was found");
 
         super.setGenes(genes);
     }

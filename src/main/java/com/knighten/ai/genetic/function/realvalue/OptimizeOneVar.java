@@ -41,7 +41,7 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      *
      * @param random the Random object to use
      */
-    void setRandom(Random random) {
+    public void setRandom(Random random) {
         this.random = random;
     }
 
@@ -50,7 +50,20 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      *
      * @param minDomain the smallest x value in search
      */
-    void setMinDomain(double minDomain) {
+    public void setMinDomain(double minDomain) {
+
+        // Catch NaN Or Infinity
+        if(!Double.isFinite(minDomain))
+            throw new IllegalArgumentException("minDomain Cannot Be NaN or Infinite: " + minDomain + " was found");
+
+        // Catch Double.MIN_VALUE
+        if(minDomain == Double.MIN_VALUE)
+            throw new IllegalArgumentException("minDomain Cannot Double.MIN_VALUE");
+
+        // Catch Double.MAX_VALUE
+        if(minDomain == Double.MAX_VALUE)
+            throw new IllegalArgumentException("minDomain Cannot Double.MAX_VALUE");
+
         this.minDomain = minDomain;
     }
 
@@ -59,7 +72,21 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      *
      * @param maxDomain the largest x value in search
      */
-    void setMaxDomain(double maxDomain) {
+    public void setMaxDomain(double maxDomain) {
+
+        // Catch NaN Or Infinity
+        if(!Double.isFinite(maxDomain))
+            throw new IllegalArgumentException("maxDomain Cannot Be NaN or Infinite: " + maxDomain + " was found");
+
+        // Catch Double._VALUE
+        if(maxDomain == Double.MIN_VALUE)
+            throw new IllegalArgumentException("maxDomain Cannot Double.MIN_VALUE");
+
+        // Catch Double.MAX_VALUE
+        if(maxDomain == Double.MAX_VALUE)
+            throw new IllegalArgumentException("maxDomain Cannot Double.MAX_VALUE");
+
+
         this.maxDomain = maxDomain;
     }
 
@@ -68,7 +95,13 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      *
      * @param function the function being optimized
      */
-    void setFunction(IOneVariableFunction function) {
+    public void setFunction(IOneVariableFunction function) {
+
+        // Catch Null
+        if(function == null)
+            throw new IllegalArgumentException("function Cannot Be Null");
+
+
         this.function = function;
     }
 

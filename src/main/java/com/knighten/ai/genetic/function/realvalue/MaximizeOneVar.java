@@ -63,12 +63,12 @@ public class MaximizeOneVar extends OptimizeOneVar {
     public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,10000, .15, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,10000, .05, .01);
         params.setTargetValue(0.0);
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new MaximizeOneVar(-10.0,
-                10.0,
+        IGenOptimizeProblem problem = new MaximizeOneVar(-1000000000000000000.0,
+                100000000000000.0,
                 (x) -> -Math.pow(x, 2),
                 new Random(123));
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
