@@ -18,6 +18,15 @@ public class OneVarIndividual extends Individual<Double>{
         this.setGenes(xValue);
     }
 
+    public void setGenes(double genes) {
+
+        // Catch NaN Or Infinity
+        if(!Double.isFinite(genes))
+            throw new IllegalArgumentException("genes Cannot Be NaN or Infinite -" + genes + "was found");
+
+        super.setGenes(genes);
+    }
+
     /**
      * Returns the string representation of the individual's x value.
      *

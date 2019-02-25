@@ -8,3 +8,10 @@ targetCompatibility = '1.8'
 version = '1.0.0'
 
 description = "Genetic optimization implemented in Java."
+
+repositories { mavenCentral() }
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+}
