@@ -10,8 +10,19 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Class for minimizing a one variable real valued function when using the genetic optimization algorithm.
+ */
 public class MinimizeOneVar extends OptimizeOneVar {
 
+    /**
+     * Creates a object used to minimize a one variable real valued function.
+     *
+     * @param minDomain the smallest x value in search
+     * @param maxDomain the largest x value in search
+     * @param function the function being maximized
+     * @param random random object used for all random number generation
+     */
     public MinimizeOneVar(double minDomain, double maxDomain, IOneVariableFunction function, Random random) {
         this.setMinDomain(minDomain);
         this.setMaxDomain(maxDomain);
@@ -19,12 +30,27 @@ public class MinimizeOneVar extends OptimizeOneVar {
         this.setRandom(random);
     }
 
-
+    /**
+     * Gets the best individual in the population based upon fitness score(highest/lowest). Since we are performing
+     * minimization we select the individual with the lowest fitness. Since the population is sorted beforehand, we
+     * select the element at the front of the list.
+     *
+     * @param population the population used to search for the best individual
+     * @return the best individual from the population
+     */
     @Override
     public OneVarIndividual getBestIndividual(List<OneVarIndividual> population) {
         return population.get(0); // Grab first since we want to minimize
     }
 
+    /**
+     * Select individuals in the population that will be used to generate next generation's population. We select the
+     * the bottom selectionPercent percentage of OneVarIndividuals with the lowest fitness(lowest function value).
+     *
+     * @param population the population that the sub-population is selected from
+     * @param selectionPercent the percent of best individuals to keep
+     * @return the sub-population selected from the population
+     */
     @Override
     public List<OneVarIndividual> selection(List<OneVarIndividual> population, double selectionPercent) {
         int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
@@ -61,6 +87,5 @@ public class MinimizeOneVar extends OptimizeOneVar {
                 + optimized.getFitness());
         System.out.println("Optimization Duration: " + duration + " ms");
         System.out.println("Generations: " + optimizationGeneration.size());
-
     }
 }
