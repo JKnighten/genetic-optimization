@@ -1,3 +1,5 @@
+package realvaluefunctions;
+
 import com.knighten.ai.genetic.function.realvalue.OneVarIndividual;
 
 import org.junit.Assert;

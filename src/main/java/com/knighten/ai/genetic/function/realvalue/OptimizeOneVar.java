@@ -35,7 +35,6 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      */
     private IOneVariableFunction function;
 
-
     /**
      *  Sets the Random object used to generate random numbers.
      *
