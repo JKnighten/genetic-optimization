@@ -43,8 +43,8 @@ public class MaximizeOneVarTests {
         listOfMockedIndividuals.add(mockIndividualGenes2);
 
         mockListOfIndividuals = Mockito.mock(ArrayList.class);
-        Mockito.when(mockListOfIndividuals.size()).thenReturn(2);
-
+        Mockito.when(mockListOfIndividuals.size())
+                .thenReturn(2);
     }
 
     @Test
@@ -75,7 +75,6 @@ public class MaximizeOneVarTests {
 
         // Result Contains The Individual With Largest Fitness
         Assert.assertEquals(result.get(0), mockIndividualGenes2);
-
     }
 
     @Test

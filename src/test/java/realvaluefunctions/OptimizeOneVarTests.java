@@ -25,6 +25,7 @@ public class OptimizeOneVarTests {
     private OneVarIndividual mockIndividualGenes1;
     private OneVarIndividual mockIndividualGenes2;
     private IOneVariableFunction mockFunction;
+    private List<OneVarIndividual> mockListOfIndividuals;
 
     @Before
     public void setup() {
@@ -66,6 +67,11 @@ public class OptimizeOneVarTests {
         Mockito.when(mockFunction.getFuncValue(2.0))
                 .thenReturn(4.0);
 
+        mockListOfIndividuals = Mockito.mock(ArrayList.class);
+        Mockito.when(mockListOfIndividuals.size())
+                .thenReturn(2);
+        Mockito.when(mockListOfIndividuals.get(anyInt()))
+                .thenReturn(mockIndividualGenes1);
     }
 
     ////////////////////////
@@ -128,8 +134,11 @@ public class OptimizeOneVarTests {
         testOptimizeOneVar.setMaxDomain(10.0);
         List<OneVarIndividual> results = testOptimizeOneVar.generateInitialPopulation(2);
 
-
+        // Correct Size Population Created
         Assert.assertEquals(2, results.size());
+
+        // Ensure Individuals Created And Genes Are Set
+        // Results Dependent On Mock mockRandomForGenerateInitial
         Assert.assertEquals(new Double(1.0), results.get(0).getGenes());
         Assert.assertEquals(new Double(2.0), results.get(1).getGenes());
     }
@@ -141,6 +150,8 @@ public class OptimizeOneVarTests {
         testOptimizeOneVar.setFunction(mockFunction);
         testOptimizeOneVar.calculateFitness(listOfMockedIndividuals);
 
+        // Ensure getGenes() Is Called Followed By setFitness()
+        // Values In setFitness() Tests Are From mockFunction
         verify(mockIndividualGenes1, times(1)).getGenes();
         verify(mockIndividualGenes1, times(1)).setFitness(1.0);
         verify(mockIndividualGenes2, times(1)).getGenes();
@@ -148,27 +159,20 @@ public class OptimizeOneVarTests {
     }
 
     @Test
-    public void calculateFitnessEnsurePopulationIsSortedByFitness() {
-        testOptimizeOneVar.setMinDomain(-10.0);
-        testOptimizeOneVar.setMaxDomain(10.0);
-        testOptimizeOneVar.setFunction(mockFunction);
+    public void crossoverEnsureCorrectNumberOfIndividualsUsed() {
+        testOptimizeOneVar.setRandom(mockRandomForCrossover);
+        testOptimizeOneVar.crossover(mockListOfIndividuals, 2);
 
-        List<OneVarIndividual> listOfIndividuals = new ArrayList<>();
-        listOfIndividuals.add(new OneVarIndividual(2.0));
-        listOfIndividuals.add(new OneVarIndividual(1.0));
-
-        testOptimizeOneVar.calculateFitness(listOfIndividuals);
-
-        Assert.assertEquals(1.0, listOfIndividuals.get(0).getFitness(), 0.00000001);
-        Assert.assertEquals(4.0, listOfIndividuals.get(1).getFitness(), 0.00000001);
+        // We Must Get 4 Individuals Total From Supplied Subpopulation
+        verify(mockListOfIndividuals, times(4)).get(anyInt());
     }
-
-
+    
     @Test
     public void crossoverEnsureCorrectGenesAreUsed() {
         testOptimizeOneVar.setRandom(mockRandomForCrossover);
         testOptimizeOneVar.crossover(listOfMockedIndividuals, 2);
 
+        // Results Dependent On mockRandomForCrossover
         verify(mockIndividualGenes1, times(3)).getGenes();
         verify(mockIndividualGenes2, times(1)).getGenes();
     }
@@ -180,10 +184,13 @@ public class OptimizeOneVarTests {
         List<OneVarIndividual> listOfIndividuals = new ArrayList<>();
         listOfIndividuals.add(new OneVarIndividual(1.0));
         listOfIndividuals.add(new OneVarIndividual(2.0));
-
         List<OneVarIndividual> results = testOptimizeOneVar.crossover(listOfIndividuals, 2);
 
+        // Correct Population Size Generated
         Assert.assertEquals(2, results.size());
+        
+        // Correct Individuals Generated From Crossing
+        // Results Dependent On mockRandomForCrossover
         Assert.assertEquals(new Double(1.5), results.get(0).getGenes());
         Assert.assertEquals(new Double(1.0), results.get(1).getGenes());
     }
@@ -193,10 +200,20 @@ public class OptimizeOneVarTests {
         testOptimizeOneVar.setRandom(mockRandomForMutate);
         testOptimizeOneVar.setMinDomain(-10.0);
         testOptimizeOneVar.setMaxDomain(10.0);
-
         testOptimizeOneVar.mutate(listOfMockedIndividuals, .05);
 
+        // Results Dependent On mockRandomForMutate And listOfMockedIndividuals
         verify(mockIndividualGenes1, times(1)).setGenes(0.0);
     }
 
+    @Test
+    public void mutateEnsureCorrectNumberOfIndividualsSelectedFromPopulation() {
+        testOptimizeOneVar.setRandom(mockRandomForMutate);
+        testOptimizeOneVar.setMinDomain(-10.0);
+        testOptimizeOneVar.setMaxDomain(10.0);
+        testOptimizeOneVar.mutate(mockListOfIndividuals, .05);
+
+        // Results Dependent On mockRandomForMutate
+        verify(mockListOfIndividuals, times(1)).get(anyInt());
+    }
 }
