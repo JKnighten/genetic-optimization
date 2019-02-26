@@ -2,13 +2,13 @@ package com.knighten.ai.genetic.stringmatch;
 
 import com.knighten.ai.genetic.GeneticOptimization;
 import com.knighten.ai.genetic.GeneticOptimizationParams;
+import com.knighten.ai.genetic.function.realvalue.OneVarIndividual;
 import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
 import com.knighten.ai.genetic.Individual;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Represents the string matching problem to be solved by genetic optimization. Starting with random strings attempt to
@@ -39,11 +39,9 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      */
     @Override
     public List<StringIndividual> generateInitialPopulation(int populationSize) {
-        List<StringMatchProblem.StringIndividual> initialPopulation = new ArrayList<>();
-        while(initialPopulation.size() != populationSize)
-            initialPopulation.add(new StringIndividual(RandomTextHelper.generateString(targetString.length())));
-
-        return initialPopulation;
+        return IntStream.range(0, populationSize)
+                .mapToObj((x) -> new StringIndividual(RandomTextHelper.generateString(targetString.length())))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -55,16 +53,17 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      */
     @Override
     public void calculateFitness(List<StringIndividual> population) {
-        for(StringIndividual individual: population) {
-            double fitness = 0.0;
-            for(int i = 0; i<individual.getGenes().length(); i++)
-                fitness += Math.abs(individual.getGenes().charAt(i) - targetString.charAt(i));
-
-            individual.setFitness(fitness);
-        }
+        population.stream()
+                .forEach((x) -> x.setFitness(stringDistance(x)));
 
         // This sort makes selection() and getBestIndividual() simpler
         Collections.sort(population);
+    }
+
+    private double stringDistance(StringIndividual individual) {
+        return IntStream.range(0, individual.getGenes().length())
+                .map((i) -> Math.abs(individual.getGenes().charAt(i) - targetString.charAt(i)))
+                .sum();
     }
 
     /**
@@ -91,12 +90,9 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
     public List<StringIndividual> selection(List<StringIndividual> population, double selectionPercent) {
         int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
 
-        // Return a modified copy of the original population
-        List<StringMatchProblem.StringIndividual> selectedPopulation = new ArrayList<>(population);
-        for(int i=population.size()-1; i>(population.size()-amountToRemove-1); i--)
-            selectedPopulation.remove(i);
-
-        return selectedPopulation;
+        return IntStream.rangeClosed(0, population.size()-amountToRemove-1)
+                .mapToObj(population::get)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -110,22 +106,25 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      */
     @Override
     public List<StringIndividual> crossover(List<StringIndividual> subPopulation, int populationSize) {
-        Random random = new Random();
-        ArrayList<StringIndividual> newPopulation = new ArrayList<>();
 
-        while(newPopulation.size() != populationSize){
-            StringIndividual individual1 = subPopulation.get(random.nextInt(subPopulation.size()));
-            StringIndividual individual2 = subPopulation.get(random.nextInt(subPopulation.size()));
+        List<String> randGenes= new Random().ints(populationSize*2,0, subPopulation.size())
+                .mapToObj(i -> subPopulation.get(i).getGenes())
+                .collect(Collectors.toList());
 
-            int crossOverPoint = random.nextInt(targetString.length());
-            String leftHalf = individual1.getGenes().substring(0, crossOverPoint);
-            String rightHalf = individual2.getGenes().substring(crossOverPoint);
-            StringIndividual crossedIndividual = new StringIndividual( leftHalf + rightHalf);
+        int[] splitPoints = new Random().ints(populationSize,0, targetString.length()).toArray();
 
-            newPopulation.add(crossedIndividual);
-        }
+        List<String> firstHalfs = IntStream.range(0, populationSize)
+                .mapToObj((i) -> randGenes.get(i).substring(0, splitPoints[i]))
+                .collect(Collectors.toList());
 
-        return newPopulation;
+        List<String> secondHalfs = IntStream.range(0, populationSize)
+                .mapToObj((i) -> randGenes.get(i+populationSize).substring(splitPoints[i]))
+                .collect(Collectors.toList());
+
+        return IntStream.range(0, populationSize)
+                .mapToObj((i) -> firstHalfs.get(i) + secondHalfs.get(i))
+                .map(StringMatchProblem.StringIndividual::new)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -138,19 +137,23 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringMatchProble
      */
     @Override
     public void mutate(List<StringIndividual> population, double mutationProb) {
+        population.stream()
+                .forEach((i) -> i.setGenes(mutateSingleIndividual(i, targetString.length(), mutationProb)));
+
+
+    }
+
+    private String mutateSingleIndividual(StringIndividual individual, int stringSize, double mutationProb) {
         Random random = new Random();
+        double[] randomMut = random.doubles(stringSize).toArray();
 
-        for(StringIndividual individual: population){
-            char[] valAsCharArray = individual.getGenes().toCharArray();
+        char[] valAsCharArray = individual.getGenes().toCharArray();
 
-            // Possible for character to be replaced with same character
-            for(int i=0; i<valAsCharArray.length; i++)
-                if(random.nextDouble() < mutationProb)
-                    valAsCharArray[i] = RandomTextHelper.generateChar();
+        IntStream.range(0, stringSize)
+                .filter((i) -> randomMut[i] < mutationProb)
+                .forEach((i) -> valAsCharArray[i] = RandomTextHelper.generateChar());
 
-            String mutatedString = new String(valAsCharArray);
-            individual.setGenes(mutatedString);
-        }
+        return new String(valAsCharArray);
     }
 
     /**
