@@ -8,10 +8,16 @@ import java.util.Random;
  */
 public class RandomTextHelper {
 
+    private Random random;
+
+    public  RandomTextHelper(Random random) {
+        this.random = random;
+    }
+
     /**
      * The set of characters that are used for generating characters and strings.
      */
-    private static final String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
+    private final String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
 
     /**
      * Generates random strings using validChars.
@@ -19,12 +25,11 @@ public class RandomTextHelper {
      * @param length the length of string to be generated
      * @return a random string
      */
-    public static String generateString(int length) {
-        Random random = new Random();
+    public String generateString(int length) {
         StringBuilder sBuilder = new StringBuilder();
 
         for(int i=0; i<length; i++)
-            sBuilder.append(validChars.charAt(random.nextInt(validChars.length())));
+            sBuilder.append(this.validChars.charAt(this.random.nextInt(this.validChars.length())));
 
         return sBuilder.toString();
     }
@@ -34,8 +39,7 @@ public class RandomTextHelper {
      *
      * @return a single random character
      */
-    public static char generateChar() {
-        Random random = new Random();
-        return validChars.charAt(random.nextInt(validChars.length()));
+    public char generateChar() {
+        return this.validChars.charAt(this.random.nextInt(this.validChars.length()));
     }
 }
