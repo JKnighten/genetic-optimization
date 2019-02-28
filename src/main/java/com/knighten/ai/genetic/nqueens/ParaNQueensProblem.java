@@ -5,7 +5,10 @@ import com.knighten.ai.genetic.GeneticOptimizationParams;
 import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
 import com.knighten.ai.genetic.Individual;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -16,7 +19,7 @@ import static java.util.stream.Collectors.toList;
  * diagonal). Parallelization is implemented by using Java 1.8 streams. This implementation is meant to be used when
  * the population size or n is very large.
  */
-public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
+public class ParaNQueensProblem extends BaseNQueensProblem {
 
     /**
      * The number of queens/board size being used; the n in the n queens problem.
@@ -24,12 +27,18 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
     private int n;
 
     /**
+     *  Used to generate random numbers. Allows the use of a seed.
+     */
+    private Random random;
+
+    /**
      * Creates a instance of ParaNQueensProblem using the specified value of n.
      *
      * @param n number of queens/board size
      */
-    public ParaNQueensProblem(int n) {
+    public ParaNQueensProblem(int n, Random random) {
         this.n = n;
+        this.random = random;
     }
 
     /**
@@ -58,11 +67,9 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
      * @return a randomly created array representation of a board
      */
     private Integer[] randomBoard(int n) {
-        Random random = new Random();
-
         Integer[] board = new Integer[n];
         for(int column=0; column<n; column++)
-            board[column] = random.nextInt(n);
+            board[column] = this.random.nextInt(n);
 
         return board;
     }
@@ -78,7 +85,7 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
     @Override
     public void calculateFitness(List<NQueensIndividual> population) {
         population.parallelStream()
-                .forEach(individual -> individual.setFitness(NQueensHelper.conflictScore(individual.getGenes())));
+                .forEach(individual -> individual.setFitness(this.conflictScore(individual.getGenes())));
 
         // TODO : Check Parallel Sort
         // This sort makes selection() and getBestIndividual() simpler
@@ -109,13 +116,9 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
     public List<NQueensIndividual> selection(List<NQueensIndividual> population, double selectionPercent) {
         int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
 
-        //TODO : Check About Making This Into A Stream
-        // Return a modified copy of the original population
-        List<NQueensIndividual> selectedPopulation = new ArrayList<>(population);
-        for(int i=population.size()-1; i>(population.size()-amountToRemove-1); i--)
-            selectedPopulation.remove(i);
-
-        return selectedPopulation;
+        return IntStream.rangeClosed(0, population.size()-amountToRemove-1)
+                .mapToObj(population::get)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -146,11 +149,10 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
      * @return a new NQueensIndividual created by individuals in selectedPopulation
      */
     private NQueensIndividual crossIndividuals(List<NQueensIndividual> selectedPopulation) {
-        Random random = new Random();
-        NQueensIndividual individ1 = selectedPopulation.get(random.nextInt(selectedPopulation.size()));
-        NQueensIndividual individ2 = selectedPopulation.get(random.nextInt(selectedPopulation.size()));
+        NQueensIndividual individ1 = selectedPopulation.get(this.random.nextInt(selectedPopulation.size()));
+        NQueensIndividual individ2 = selectedPopulation.get(this.random.nextInt(selectedPopulation.size()));
 
-        int crossPoint = random.nextInt(n);
+        int crossPoint = this.random.nextInt(n);
         Integer[] crossedBoard = new Integer[n];
         for(int column=0; column<n; column++)
             crossedBoard[column] = (column<crossPoint) ? individ1.getGenes()[column] : individ2.getGenes()[column];
@@ -178,10 +180,9 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
      * @param mutationProb the probability that a gene of an individual is mutated
      */
     private void randomMutation(NQueensIndividual individual, double mutationProb){
-        Random random = new Random();
         for(int column=0; column<n; column++)
-            if(random.nextDouble() < mutationProb)
-                individual.getGenes()[column] = random.nextInt(n);
+            if(this.random.nextDouble() < mutationProb)
+                individual.getGenes()[column] = this.random.nextInt(n);
     }
 
     /**
@@ -197,7 +198,7 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new ParaNQueensProblem(24);
+        IGenOptimizeProblem problem = new ParaNQueensProblem(24, new Random());
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //
@@ -215,4 +216,5 @@ public class ParaNQueensProblem implements IGenOptimizeProblem<NQueensIndividual
         System.out.println("Optimization Duration: " + duration + " ms");
         System.out.println("Generations: " + optimizationGeneration.size());
     }
+
 }

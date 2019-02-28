@@ -14,7 +14,7 @@ import java.util.Random;
  * Represents the n queens problem. Given a n x n sized chess board, find a way to position n queens on the board such
  * that none of the queens are in conflict with one another (ie. they are in the same row or diagonal).
  */
-public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
+public class NQueensProblem extends BaseNQueensProblem {
 
     /**
      * The number of queens/board size being used; the n in the n queens problem.
@@ -22,12 +22,18 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
     private int n;
 
     /**
+     *  Used to generate random numbers. Allows the use of a seed.
+     */
+    private Random random;
+
+    /**
      * Creates a instance of NQueensProblem using the specified value of n.
      *
      * @param n number of queens/board size
      */
-    public NQueensProblem(int n) {
+    public NQueensProblem(int n, Random random) {
         this.n = n;
+        this.random = random;
     }
 
     /**
@@ -39,13 +45,11 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
      */
     @Override
     public List<com.knighten.ai.genetic.nqueens.NQueensIndividual> generateInitialPopulation(int populationSize) {
-        Random random = new Random();
-
         List<NQueensIndividual> initialPopulation = new ArrayList<>();
         while(initialPopulation.size() != populationSize){
             Integer[] board = new Integer[n];
             for(int column=0; column<n; column++)
-                board[column] = random.nextInt(n);
+                board[column] = this.random.nextInt(n);
 
             initialPopulation.add(new NQueensIndividual(board));
         }
@@ -64,7 +68,7 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
     @Override
     public void calculateFitness(List<NQueensIndividual> population) {
         for(Individual individual: population)
-            individual.setFitness(NQueensHelper.conflictScore((Integer[]) individual.getGenes()));
+            individual.setFitness(this.conflictScore((Integer[]) individual.getGenes()));
 
         // This sort makes selection() and getBestIndividual() simpler
         Collections.sort(population);
@@ -114,14 +118,13 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
      */
     @Override
     public List<NQueensIndividual> crossover(List<NQueensIndividual> subPopulation, int populationSize) {
-        Random random = new Random();
         ArrayList<NQueensIndividual> newPopulation = new ArrayList<>();
 
         while(newPopulation.size() != populationSize){
-            NQueensIndividual individ1 = subPopulation.get(random.nextInt(subPopulation.size()));
-            NQueensIndividual individ2 = subPopulation.get(random.nextInt(subPopulation.size()));
+            NQueensIndividual individ1 = subPopulation.get(this.random.nextInt(subPopulation.size()));
+            NQueensIndividual individ2 = subPopulation.get(this.random.nextInt(subPopulation.size()));
 
-            int crossPoint = random.nextInt(n);
+            int crossPoint = this.random.nextInt(n);
             Integer[] crossedBoard = new Integer[n];
             for(int column=0; column<n; column++)
                 crossedBoard[column] = (column<crossPoint) ? individ1.getGenes()[column] : individ2.getGenes()[column];
@@ -141,12 +144,10 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
      */
     @Override
     public void mutate(List<NQueensIndividual> population, double mutationProb) {
-        Random random = new Random();
-
         for(NQueensIndividual individual : population)
             for(int column=0; column<n; column++)
-                if(random.nextDouble() < mutationProb)
-                    individual.getGenes()[column] = random.nextInt(n);
+                if(this.random.nextDouble() < mutationProb)
+                    individual.getGenes()[column] = this.random.nextInt(n);
 
     }
 
@@ -163,7 +164,7 @@ public class NQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
         params.setTargetValue(0.0);
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new NQueensProblem(128);
+        IGenOptimizeProblem problem = new NQueensProblem(12, new Random());
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //

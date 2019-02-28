@@ -39,4 +39,5 @@ public class NQueensIndividual extends Individual<Integer[]> {
 
         return sb.toString();
     }
+
 }
