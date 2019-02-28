@@ -13,6 +13,13 @@ public class StringIndividual extends Individual<String> {
      * @param stringValue the string contained in the individual
      */
     public StringIndividual(String stringValue){
+
+        if(stringValue == null)
+            throw new IllegalArgumentException("A StringIndividual's Genes Cannot Be Null");
+
+        if(stringValue.isEmpty())
+            throw new IllegalArgumentException("A StringIndividual's Genes Cannot Be Empty");
+
         this.setGenes(stringValue);
     }
 

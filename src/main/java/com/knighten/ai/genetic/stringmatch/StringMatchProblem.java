@@ -5,7 +5,9 @@ import com.knighten.ai.genetic.GeneticOptimizationParams;
 import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
 import com.knighten.ai.genetic.Individual;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,7 +31,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
     /**
      *  Used to generate text data that is valid in the problem.
      */
-    private RandomTextHelper randomValidText;
+    private RandomTextHelper textHelper;
 
     /**
      * Creates a instance of StringMatchProblem containing the target string trying to be obtained.
@@ -37,10 +39,10 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      * @param targetString the string trying to be found by the genetic algorithm
      * @param random object used to generate random numbers for the problem
      */
-    public StringMatchProblem(String targetString, Random random) {
+    public StringMatchProblem(String targetString, Random random, RandomTextHelper textHelper) {
         this.targetString = targetString;
         this.random = random;
-        this.randomValidText = new RandomTextHelper(random);
+        this.textHelper = textHelper;
     }
 
     /**
@@ -55,7 +57,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
 
         return Collections.nCopies(populationSize, targetString.length())
                 .stream()
-                .map(randomValidText::generateString)
+                .map(textHelper::generateString)
                 .map(StringIndividual::new)
                 .collect(Collectors.toList());
     }
@@ -160,7 +162,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
                     char[] genesAsArray = individual.getGenes().toCharArray();
                     IntStream.range(0, targetString.length())
                             .filter((i) -> mutationChance[i] < mutationProb)
-                            .forEach((i) -> genesAsArray[i] = this.randomValidText.generateChar());
+                            .forEach((i) -> genesAsArray[i] = this.textHelper.generateChar());
 
                     individual.setGenes(new String(genesAsArray));
                 });
@@ -177,9 +179,12 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
         GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 2000,.2, .01);
         params.setTargetValue(0.0);
 
+        String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
+        RandomTextHelper textHelper = new RandomTextHelper(new Random(), validChars);
+
         // Setup Problem //
         IGenOptimizeProblem<StringIndividual> problem = new StringMatchProblem("Hello String Matching",
-                new Random());
+                new Random(), textHelper);
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //
