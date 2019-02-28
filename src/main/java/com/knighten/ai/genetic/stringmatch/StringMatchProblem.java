@@ -40,6 +40,19 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      * @param random object used to generate random numbers for the problem
      */
     public StringMatchProblem(String targetString, Random random, RandomTextHelper textHelper) {
+
+        if(targetString == null)
+            throw new IllegalArgumentException("Target String Cannot Be Null");
+
+        if(targetString.isEmpty())
+            throw new IllegalArgumentException("Target Cannot Be Empty");
+
+        if(random == null)
+            throw new IllegalArgumentException("Random Object Cannot Be Null");
+
+        if(textHelper == null)
+            throw new IllegalArgumentException("RandomTExtHelper Object Cannot Be Null");
+
         this.targetString = targetString;
         this.random = random;
         this.textHelper = textHelper;
@@ -75,7 +88,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
                 .forEach((individual) -> {
                     // Find The Difference Between Each Character In The Current Individual and Target Gene
                     // Sum All Differences For Final Score
-                    double score = IntStream.range(0, individual.getGenes().length())
+                    double score = IntStream.range(0, targetString.length())
                             .map((i) -> Math.abs(individual.getGenes().charAt(i) - targetString.charAt(i)))
                             .sum();
                     individual.setFitness(score);

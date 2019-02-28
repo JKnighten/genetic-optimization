@@ -123,9 +123,9 @@ public class OptimizeOneVarTests {
         testOptimizeOneVar.setFunction(null);
     }
 
-    ////////////////////
-    // Method Outputs //
-    ////////////////////
+    ///////////////////
+    // Check Methods //
+    ///////////////////
 
     @Test
     public void generateInitialPopulationCorrectObjectsCorrected() {

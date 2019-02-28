@@ -34,6 +34,10 @@ public class RandomTextHelperTests {
                 .thenReturn(Arrays.stream(new int[50000]));
     }
 
+    ////////////////////////
+    // Parameter Checking //
+    ////////////////////////
+
     @Test(expected = IllegalArgumentException.class)
     public void constructorNullRandom() {
         new RandomTextHelper(null, validCharacters);
@@ -54,6 +58,10 @@ public class RandomTextHelperTests {
         RandomTextHelper testObject = new RandomTextHelper(mockRandom, validCharacters);
         testObject.generateString(0);
     }
+
+    ///////////////////
+    // Check Methods //
+    ///////////////////
 
     @Test
     public void generateCharVerifyRandomUsed() {
