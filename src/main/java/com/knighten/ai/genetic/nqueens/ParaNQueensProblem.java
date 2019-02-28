@@ -50,28 +50,11 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public List<NQueensIndividual> generateInitialPopulation(int populationSize) {
-        List<NQueensIndividual > initialPopulation  = IntStream.range(0, populationSize)
+        return IntStream.range(0, populationSize)
                 .parallel()
-                .mapToObj(i -> new NQueensIndividual(randomBoard(n)))
+                .mapToObj(i -> this.random.ints(n, 0, n).boxed().toArray(Integer[]::new))
+                .map(NQueensIndividual::new)
                 .collect(toList());
-
-        return initialPopulation;
-    }
-
-    /**
-     * Creates a random integer array representation of a chess board for the n queens problem. Only one queen is
-     * allowed per column. Boards are limited to one queen a column to simplify the problem. Thus each index of the
-     * array represents a column, and the value stored there represents what row in that column contains a queen.
-     *
-     * @param n size of random board to create
-     * @return a randomly created array representation of a board
-     */
-    private Integer[] randomBoard(int n) {
-        Integer[] board = new Integer[n];
-        for(int column=0; column<n; column++)
-            board[column] = this.random.nextInt(n);
-
-        return board;
     }
 
     /**
@@ -87,7 +70,6 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
         population.parallelStream()
                 .forEach(individual -> individual.setFitness(this.conflictScore(individual.getGenes())));
 
-        // TODO : Check Parallel Sort
         // This sort makes selection() and getBestIndividual() simpler
         Collections.sort(population);
     }
@@ -102,8 +84,7 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
     public NQueensIndividual getBestIndividual(List<NQueensIndividual> population) {
         return population.get(0);
     }
-
-
+    
     /**
      * Selects the selectionPercent percent of best NQueensIndividuals in the population. The best NQueensIndividuals
      * are the ones with the lowest fitness score, which with the least amount of conflicts.
@@ -117,6 +98,7 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
         int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
 
         return IntStream.rangeClosed(0, population.size()-amountToRemove-1)
+                .parallel()
                 .mapToObj(population::get)
                 .collect(Collectors.toList());
     }
@@ -134,30 +116,35 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public List<NQueensIndividual> crossover(List<NQueensIndividual> subPopulation, int populationSize) {
-        List<NQueensIndividual> newPopulation = IntStream.range(0, populationSize)
-                .parallel()
-                .mapToObj(i -> crossIndividuals(subPopulation))
+
+        List<NQueensIndividual> randomPairs = this.random.ints(2*populationSize, 0, subPopulation.size())
+                //.parallel()
+                .mapToObj(subPopulation::get)
                 .collect(toList());
 
-        return newPopulation;
+        int[] crossPoints = this.random.ints(populationSize, 0, this.n).toArray();
+
+        return IntStream.range(0, populationSize)
+                .parallel()
+                .mapToObj(i -> crossIndividuals(randomPairs.get(i), randomPairs.get(i+populationSize), crossPoints[i]))
+                .map(NQueensIndividual::new)
+                .collect(toList());
     }
 
     /**
      * Performs the crossing mentioned above. This is called in parallel.
      *
-     * @param selectedPopulation the sub-population used to generate the new population
+     * @param individ1 individual were first half of genes is taken from
+     * @param individ2 individual were second half of genes is taken from
+     * @param crossPoint the point which genes are crossed
      * @return a new NQueensIndividual created by individuals in selectedPopulation
      */
-    private NQueensIndividual crossIndividuals(List<NQueensIndividual> selectedPopulation) {
-        NQueensIndividual individ1 = selectedPopulation.get(this.random.nextInt(selectedPopulation.size()));
-        NQueensIndividual individ2 = selectedPopulation.get(this.random.nextInt(selectedPopulation.size()));
-
-        int crossPoint = this.random.nextInt(n);
-        Integer[] crossedBoard = new Integer[n];
-        for(int column=0; column<n; column++)
+    private Integer[] crossIndividuals(NQueensIndividual individ1, NQueensIndividual individ2, int crossPoint) {
+        Integer[] crossedBoard = new Integer[this.n];
+        for(int column=0; column<this.n; column++)
             crossedBoard[column] = (column<crossPoint) ? individ1.getGenes()[column] : individ2.getGenes()[column];
 
-        return new NQueensIndividual(crossedBoard);
+        return crossedBoard;
     }
 
     /**
@@ -169,20 +156,17 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public void mutate(List<NQueensIndividual> population, double mutationProb) {
-        population.parallelStream()
-                .forEach(individual -> randomMutation(individual, mutationProb));
-    }
 
-    /**
-     * Handles the mutation of a single individual. This is called in parallel.
-     *
-     * @param individual the individual being mutated
-     * @param mutationProb the probability that a gene of an individual is mutated
-     */
-    private void randomMutation(NQueensIndividual individual, double mutationProb){
-        for(int column=0; column<n; column++)
-            if(this.random.nextDouble() < mutationProb)
-                individual.getGenes()[column] = this.random.nextInt(n);
+        population.stream()
+                .parallel()
+                .forEach((individual) -> {
+                    double[] mutationChance = this.random.doubles(this.n).toArray();
+                    int[] randQueenPositions = this.random.ints(this.n, 0, this.n).toArray();
+
+                    IntStream.range(0, this.n)
+                            .filter((i) -> mutationChance[i] < mutationProb)
+                            .forEach((column) -> individual.getGenes()[column] = randQueenPositions[column]);
+                });
     }
 
     /**
@@ -193,12 +177,12 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
     public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
-        GeneticOptimizationParams params = new GeneticOptimizationParams(10000, 5000,.05, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(10000, 1000,.05, .01);
         params.setTargetValue(0.0);
 
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new ParaNQueensProblem(24, new Random());
+        IGenOptimizeProblem problem = new ParaNQueensProblem(12, new Random(1L));
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //
