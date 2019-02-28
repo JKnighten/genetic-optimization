@@ -84,7 +84,7 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
     public NQueensIndividual getBestIndividual(List<NQueensIndividual> population) {
         return population.get(0);
     }
-    
+
     /**
      * Selects the selectionPercent percent of best NQueensIndividuals in the population. The best NQueensIndividuals
      * are the ones with the lowest fitness score, which with the least amount of conflicts.
@@ -116,9 +116,7 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public List<NQueensIndividual> crossover(List<NQueensIndividual> subPopulation, int populationSize) {
-
         List<NQueensIndividual> randomPairs = this.random.ints(2*populationSize, 0, subPopulation.size())
-                //.parallel()
                 .mapToObj(subPopulation::get)
                 .collect(toList());
 
@@ -156,7 +154,6 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public void mutate(List<NQueensIndividual> population, double mutationProb) {
-
         population.stream()
                 .parallel()
                 .forEach((individual) -> {

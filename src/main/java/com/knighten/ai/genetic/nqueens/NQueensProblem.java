@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Represents the n queens problem. Given a n x n sized chess board, find a way to position n queens on the board such
@@ -45,16 +49,10 @@ public class NQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public List<com.knighten.ai.genetic.nqueens.NQueensIndividual> generateInitialPopulation(int populationSize) {
-        List<NQueensIndividual> initialPopulation = new ArrayList<>();
-        while(initialPopulation.size() != populationSize){
-            Integer[] board = new Integer[n];
-            for(int column=0; column<n; column++)
-                board[column] = this.random.nextInt(n);
-
-            initialPopulation.add(new NQueensIndividual(board));
-        }
-
-        return initialPopulation;
+        return IntStream.range(0, populationSize)
+                .mapToObj(i -> this.random.ints(n, 0, n).boxed().toArray(Integer[]::new))
+                .map(NQueensIndividual::new)
+                .collect(toList());
     }
 
     /**
@@ -67,8 +65,8 @@ public class NQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public void calculateFitness(List<NQueensIndividual> population) {
-        for(Individual individual: population)
-            individual.setFitness(this.conflictScore((Integer[]) individual.getGenes()));
+        population.stream()
+                .forEach(individual -> individual.setFitness(this.conflictScore(individual.getGenes())));
 
         // This sort makes selection() and getBestIndividual() simpler
         Collections.sort(population);
@@ -97,12 +95,9 @@ public class NQueensProblem extends BaseNQueensProblem {
     public List<NQueensIndividual> selection(List<NQueensIndividual> population, double selectionPercent) {
         int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
 
-        // Return a modified copy of the original population
-        List<NQueensIndividual> selectedPopulation = new ArrayList<>(population);
-        for(int i=population.size()-1; i>(population.size()-amountToRemove-1); i--)
-            selectedPopulation.remove(i);
-
-        return selectedPopulation;
+        return IntStream.rangeClosed(0, population.size()-amountToRemove-1)
+                .mapToObj(population::get)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -118,21 +113,32 @@ public class NQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public List<NQueensIndividual> crossover(List<NQueensIndividual> subPopulation, int populationSize) {
-        ArrayList<NQueensIndividual> newPopulation = new ArrayList<>();
+        List<NQueensIndividual> randomPairs = this.random.ints(2*populationSize, 0, subPopulation.size())
+                .mapToObj(subPopulation::get)
+                .collect(toList());
 
-        while(newPopulation.size() != populationSize){
-            NQueensIndividual individ1 = subPopulation.get(this.random.nextInt(subPopulation.size()));
-            NQueensIndividual individ2 = subPopulation.get(this.random.nextInt(subPopulation.size()));
+        int[] crossPoints = this.random.ints(populationSize, 0, this.n).toArray();
 
-            int crossPoint = this.random.nextInt(n);
-            Integer[] crossedBoard = new Integer[n];
-            for(int column=0; column<n; column++)
-                crossedBoard[column] = (column<crossPoint) ? individ1.getGenes()[column] : individ2.getGenes()[column];
+        return IntStream.range(0, populationSize)
+                .mapToObj(i -> crossIndividuals(randomPairs.get(i), randomPairs.get(i+populationSize), crossPoints[i]))
+                .map(NQueensIndividual::new)
+                .collect(toList());
+    }
 
-            newPopulation.add(new NQueensIndividual(crossedBoard));
-        }
+    /**
+     * Performs the crossing mentioned above. This is called in parallel.
+     *
+     * @param individ1 individual were first half of genes is taken from
+     * @param individ2 individual were second half of genes is taken from
+     * @param crossPoint the point which genes are crossed
+     * @return a new NQueensIndividual created by individuals in selectedPopulation
+     */
+    private Integer[] crossIndividuals(NQueensIndividual individ1, NQueensIndividual individ2, int crossPoint) {
+        Integer[] crossedBoard = new Integer[this.n];
+        for(int column=0; column<this.n; column++)
+            crossedBoard[column] = (column<crossPoint) ? individ1.getGenes()[column] : individ2.getGenes()[column];
 
-        return newPopulation;
+        return crossedBoard;
     }
 
     /**
@@ -144,10 +150,15 @@ public class NQueensProblem extends BaseNQueensProblem {
      */
     @Override
     public void mutate(List<NQueensIndividual> population, double mutationProb) {
-        for(NQueensIndividual individual : population)
-            for(int column=0; column<n; column++)
-                if(this.random.nextDouble() < mutationProb)
-                    individual.getGenes()[column] = this.random.nextInt(n);
+        population.stream()
+                .forEach((individual) -> {
+                    double[] mutationChance = this.random.doubles(this.n).toArray();
+                    int[] randQueenPositions = this.random.ints(this.n, 0, this.n).toArray();
+
+                    IntStream.range(0, this.n)
+                            .filter((i) -> mutationChance[i] < mutationProb)
+                            .forEach((column) -> individual.getGenes()[column] = randQueenPositions[column]);
+                });
 
     }
 
@@ -164,7 +175,7 @@ public class NQueensProblem extends BaseNQueensProblem {
         params.setTargetValue(0.0);
 
         // Setup Problem //
-        IGenOptimizeProblem problem = new NQueensProblem(12, new Random());
+        IGenOptimizeProblem problem = new NQueensProblem(12, new Random(123));
         GeneticOptimization optimizer = new GeneticOptimization(problem, params);
 
         // Run Optimization //
@@ -182,4 +193,5 @@ public class NQueensProblem extends BaseNQueensProblem {
         System.out.println("Optimization Duration: " + duration + " ms");
         System.out.println("Generations: " + optimizationGeneration.size());
     }
+
 }
