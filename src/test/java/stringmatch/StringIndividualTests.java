@@ -20,9 +20,10 @@ public class StringIndividualTests {
         new StringIndividual("");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toStringReturnsGenesAsString() {
         StringIndividual testObject = new StringIndividual("test");
+
         Assert.assertEquals("test", testObject.toString());
     }
 
