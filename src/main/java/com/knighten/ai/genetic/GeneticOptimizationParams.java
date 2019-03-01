@@ -30,7 +30,7 @@ public class GeneticOptimizationParams {
      * score. Optimization terminates when a generation is made whose's best individual has a fitness score equal to
      * this value.
      */
-    private double targetValue = Integer.MAX_VALUE;
+    private double targetValue = Double.MAX_VALUE;
 
 
     /**
@@ -43,6 +43,19 @@ public class GeneticOptimizationParams {
      */
     public GeneticOptimizationParams(int populationSize, int maxGenerations , double selectionPercent,
                                      double mutationProb) {
+
+        if(populationSize < 1)
+            throw new IllegalArgumentException("Population Size Must Be Greater Than Zero");
+
+        if(maxGenerations < 1)
+            throw new IllegalArgumentException("Max Generations Must Be Greater Than Zero");
+
+        if(selectionPercent <= 0.0 || selectionPercent > 1.0)
+            throw new IllegalArgumentException("Selection Percentage Must Be Greater Than Zero");
+
+        if(mutationProb < 0.0 || mutationProb > 1.0)
+            throw new IllegalArgumentException("Mutation Probability Must Be Greater Than Or Equal To Zero");
+
         this.populationSize = populationSize;
         this.maxGenerations = maxGenerations;
         this.selectionPercent = selectionPercent;
@@ -100,6 +113,10 @@ public class GeneticOptimizationParams {
      * @param targetValue the termination fitness score value
      */
     public void setTargetValue(double targetValue) {
+
+        if(!Double.isFinite(targetValue))
+            throw new IllegalArgumentException("Target Value Cannot Be NaN Or Infinite");
+
         this.targetValue = targetValue;
     }
 

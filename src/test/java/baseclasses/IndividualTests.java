@@ -52,6 +52,6 @@ public class IndividualTests {
     public void compareToLessThan() {
         Assert.assertEquals(-1, individualFitness1.compareTo(individualFitness2));
     }
-    
+
 }
 
