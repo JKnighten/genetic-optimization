@@ -28,6 +28,13 @@ public class GeneticOptimization {
      * @param params optimization parameters
      */
     public GeneticOptimization(IGenOptimizeProblem problem, GeneticOptimizationParams params) {
+
+        if(problem == null)
+            throw new IllegalArgumentException("The Problem Object Cannot Be null");
+
+        if(params == null)
+            throw new IllegalArgumentException("Optimization Parameters Cannot Be null");
+
         this.problem = problem;
         this.params = params;
     }
