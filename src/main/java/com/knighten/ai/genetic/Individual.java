@@ -32,6 +32,11 @@ public class Individual<V> implements Comparable<Individual> {
      * @param fitness the individual's calculated fitness score
      */
     public void setFitness(double fitness) {
+
+        // Catch NaN Or Infinity
+        if(!Double.isFinite(fitness))
+            throw new IllegalArgumentException("Fitness Cannot Be NaN or Infinite: " + genes + " was found");
+
         this.fitness = fitness;
     }
 
@@ -51,6 +56,10 @@ public class Individual<V> implements Comparable<Individual> {
      * @param genes the individual's genes
      */
      public void setGenes(V genes) {
+
+         if(genes == null)
+             throw new IllegalArgumentException("Genes Cannot Be Null");
+
          this.genes = genes;
      }
 
