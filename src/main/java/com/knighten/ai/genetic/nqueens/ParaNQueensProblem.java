@@ -68,7 +68,7 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
     @Override
     public void calculateFitness(List<NQueensIndividual> population) {
         population.parallelStream()
-                .forEach(individual -> individual.setFitness(this.conflictScore(individual.getGenes())));
+                .forEach(individual -> individual.setFitness(this.conflictScore(individual)));
 
         // This sort makes selection() and getBestIndividual() simpler
         Collections.sort(population);

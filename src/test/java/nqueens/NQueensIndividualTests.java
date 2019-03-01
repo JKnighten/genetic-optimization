@@ -38,5 +38,5 @@ public class NQueensIndividualTests {
         NQueensIndividual testObject = new NQueensIndividual(validArray);
         Assert.assertEquals("Q * * * \n* Q * * \n* * Q * \n* * * Q ", testObject.toString());
     }
-    
+
 }

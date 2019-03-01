@@ -7,10 +7,12 @@ public abstract class BaseNQueensProblem implements IGenOptimizeProblem<NQueensI
     /**
      * Returns the number of conflicts on the board.
      *
-     * @param board the board to be evaluated
+     * @param individual the individual whose board is to be evaluated
      * @return the number on conflicts on the board
      */
-    public int conflictScore(Integer[] board) {
+    public int conflictScore(NQueensIndividual individual) {
+        //TODO - Replace Using A Set
+        Integer[] board = individual.getGenes();
         int score = 0;
 
         for(int queen = 0; queen < board.length; queen++) {
@@ -18,7 +20,7 @@ public abstract class BaseNQueensProblem implements IGenOptimizeProblem<NQueensI
             for(int remainingQueen=queen+1; remainingQueen<board.length; remainingQueen++){
 
                 // Row Conflict
-                if(board[queen] == board[remainingQueen]) {
+                if(board[queen].compareTo(board[remainingQueen]) == 0 ) {
                     score++;
                     continue;
                 }

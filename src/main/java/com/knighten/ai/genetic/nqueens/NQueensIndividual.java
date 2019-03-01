@@ -2,9 +2,6 @@ package com.knighten.ai.genetic.nqueens;
 
 import com.knighten.ai.genetic.Individual;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
