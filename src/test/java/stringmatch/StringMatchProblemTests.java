@@ -180,7 +180,9 @@ public class StringMatchProblemTests {
         testObject.mutate(listOfMockIndividuals, .05);
 
         // Results Dependent On mockRandom And listOfMockIndividuals
+        verify(mockIndividualGenesTESS, times(1)).getGenes();
         verify(mockIndividualGenesTESS, times(1)).setGenes("aess");
+        verify(mockIndividualGenesSDRS, times(1)).getGenes();
         verify(mockIndividualGenesSDRS, times(1)).setGenes("adrs");
     }
 

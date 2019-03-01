@@ -5,7 +5,6 @@ import com.knighten.ai.genetic.GeneticOptimizationParams;
 import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
 import com.knighten.ai.genetic.Individual;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -36,6 +35,13 @@ public class NQueensProblem extends BaseNQueensProblem {
      * @param n number of queens/board size
      */
     public NQueensProblem(int n, Random random) {
+
+        if(n <= 3)
+            throw new IllegalArgumentException("N Must Be Greater Than 3");
+
+        if(random == null)
+            throw new IllegalArgumentException("Random Object Cannot Be Null");
+
         this.n = n;
         this.random = random;
     }
@@ -155,13 +161,16 @@ public class NQueensProblem extends BaseNQueensProblem {
                     double[] mutationChance = this.random.doubles(this.n).toArray();
                     int[] randQueenPositions = this.random.ints(this.n, 0, this.n).toArray();
 
+                    Integer[] genes = individual.getGenes();
+
                     IntStream.range(0, this.n)
                             .filter((i) -> mutationChance[i] < mutationProb)
-                            .forEach((column) -> individual.getGenes()[column] = randQueenPositions[column]);
+                            .forEach((column) -> genes[column] = randQueenPositions[column]);
+
+                    individual.setGenes(genes);
                 });
 
     }
-
 
     /**
      * A test execution of the NQueensProblem.
