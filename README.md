@@ -1,7 +1,7 @@
 # Genetic Optimization
 
 This is a java based implementation of genetic optimization. It is written as a framework so that a variety of problems
-can be used by the supplied optimizer. Users simply need to create and class that represents their problem and implement
+can be used by the supplied optimizer. Users simply need to create a class that represents their problem and implement
 a small set of methods.
 
 ## How To Use
