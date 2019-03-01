@@ -112,6 +112,8 @@ for a machine learning model.
 ## Possible Future Work
 
 * Early stopping if there is minimal change between generations fitness
+* Write a version of the optimizer that is parallel, so that framework users can focus on representing their problem 
+instead of worrying about making a parallel representation
 * Optimization Problem - Find largest non-overlapping circle that can be placed in a finite region that contains other
  circles
 * Optimization Problem - Find the arrangement of rectangles in a finite area that gives the most free space
