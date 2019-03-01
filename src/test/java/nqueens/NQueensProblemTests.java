@@ -1,6 +1,5 @@
 package nqueens;
 
-
 import com.knighten.ai.genetic.nqueens.NQueensIndividual;
 import com.knighten.ai.genetic.nqueens.NQueensProblem;
 import org.junit.Assert;
@@ -25,7 +24,7 @@ public class NQueensProblemTests {
     private List<NQueensIndividual> mockListOfIndividuals;
 
     @Before
-    public void setUp() {
+    public void setup() {
         mockRandom = Mockito.mock(Random.class);
         Mockito.when(mockRandom.ints(4, 0, 4))
                 .thenReturn(IntStream.range(0, 4))
@@ -37,7 +36,6 @@ public class NQueensProblemTests {
         Mockito.when(mockRandom.ints(2, 0, 4))
                 .thenReturn(Arrays.stream(new int[]{1, 2}));
         double[] array = {.04, .95, .5, .5};
-        List<Double> list = new ArrayList<>();
         Mockito.when(mockRandom.doubles(4))
                 .thenReturn(Arrays.stream(array))
                 .thenReturn(Arrays.stream(array));

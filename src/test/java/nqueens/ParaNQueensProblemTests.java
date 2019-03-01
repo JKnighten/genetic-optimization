@@ -1,7 +1,6 @@
 package nqueens;
 
 import com.knighten.ai.genetic.nqueens.NQueensIndividual;
-import com.knighten.ai.genetic.nqueens.NQueensProblem;
 import com.knighten.ai.genetic.nqueens.ParaNQueensProblem;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +25,7 @@ public class ParaNQueensProblemTests {
     private List<NQueensIndividual> mockListOfIndividuals;
 
     @Before
-    public void setUp() {
+    public void setup() {
         mockRandom = Mockito.mock(Random.class);
         Mockito.when(mockRandom.ints(4, 0, 4))
                 .thenReturn(IntStream.range(0, 4))
@@ -83,6 +82,10 @@ public class ParaNQueensProblemTests {
 
         Assert.assertEquals(4, result.size());
     }
+
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void calculateFitnessVerifyCorrectFitnessScoreAndCorrectUseOfIndividualsGenes() {

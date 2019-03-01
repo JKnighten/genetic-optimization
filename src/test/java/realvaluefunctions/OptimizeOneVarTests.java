@@ -123,9 +123,9 @@ public class OptimizeOneVarTests {
         testOptimizeOneVar.setFunction(null);
     }
 
-    ///////////////////
-    // Check Methods //
-    ///////////////////
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void generateInitialPopulationCorrectObjectsCorrected() {
@@ -216,4 +216,5 @@ public class OptimizeOneVarTests {
         // Results Dependent On mockRandomForMutate
         verify(mockListOfIndividuals, times(1)).get(anyInt());
     }
+
 }

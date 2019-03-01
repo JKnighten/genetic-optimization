@@ -1,6 +1,5 @@
 package stringmatch;
 
-
 import com.knighten.ai.genetic.stringmatch.RandomTextHelper;
 import com.knighten.ai.genetic.stringmatch.StringIndividual;
 import com.knighten.ai.genetic.stringmatch.StringMatchProblem;
@@ -62,7 +61,6 @@ public class StringMatchProblemTests {
                 .thenReturn(2);
         Mockito.when(mockListOfIndividuals.get(anyInt()))
                 .thenReturn(mockIndividualGenesTESS);
-
     }
 
     ////////////////////////
@@ -89,9 +87,9 @@ public class StringMatchProblemTests {
         new StringMatchProblem("test", mockRandom, null);
     }
 
-    ///////////////////
-    // Check Methods //
-    ///////////////////
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void generateInitialPopulationCorrectMethodsUsed() {

@@ -18,7 +18,7 @@ public class BaseNQueensProblemTests {
     private NQueensIndividual mockIndividual3;
 
     @Before
-    public void setUp() {
+    public void setup() {
         // Most Mock The Test Class Since It Is Abstract
         testBaseNQueensProblem = Mockito.mock(BaseNQueensProblem.class, Mockito.CALLS_REAL_METHODS);
 
@@ -34,6 +34,10 @@ public class BaseNQueensProblemTests {
         Mockito.when(mockIndividual3.getGenes())
                 .thenReturn(new Integer[]{0, 1, 2, 3});
     }
+
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void conflictScoreVerifyGenesUsed() {

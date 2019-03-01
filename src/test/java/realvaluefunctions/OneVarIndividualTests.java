@@ -8,24 +8,18 @@ import org.junit.Test;
 
 public class OneVarIndividualTests {
 
-    @Test
-    public void toStringProperStringGenerated() {
-        OneVarIndividual testIndividual = new OneVarIndividual(1.0);
-        Assert.assertEquals("1.0", testIndividual.toString());
-    }
-
     ////////////////////////
     // Parameter Checking //
     ////////////////////////
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorInvalidIndividualWithNaN() {
-        OneVarIndividual testIndividual = new OneVarIndividual(Double.NaN);
+        new OneVarIndividual(Double.NaN);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorInvalidIndividualWithInfinity() {
-        OneVarIndividual testIndividual = new OneVarIndividual(Double.POSITIVE_INFINITY);
+        new OneVarIndividual(Double.POSITIVE_INFINITY);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -39,4 +33,15 @@ public class OneVarIndividualTests {
         OneVarIndividual testIndividual = new OneVarIndividual(0.0);
         testIndividual.setGenes(Double.POSITIVE_INFINITY);
     }
+
+    ////////////////////
+    // Method Testing //
+    ////////////////////
+
+    @Test
+    public void toStringProperStringGenerated() {
+        OneVarIndividual testIndividual = new OneVarIndividual(1.0);
+        Assert.assertEquals("1.0", testIndividual.toString());
+    }
+
 }

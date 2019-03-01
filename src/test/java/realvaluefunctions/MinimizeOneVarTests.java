@@ -24,7 +24,7 @@ public class MinimizeOneVarTests {
     private List<OneVarIndividual> mockListOfIndividuals;
 
     @Before
-    public void setUp() {
+    public void setup() {
 
         mockFunction = Mockito.mock(IOneVariableFunction.class);
         mockRandom = Mockito.mock(Random.class);
@@ -44,6 +44,10 @@ public class MinimizeOneVarTests {
         Mockito.when(mockListOfIndividuals.size())
                 .thenReturn(2);
     }
+
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void getBestIndividualEnsureIndividualWithLowestFitnessReturned() {
@@ -83,4 +87,5 @@ public class MinimizeOneVarTests {
         // Only One Element Should Be Returned, But May Need To Scan List To Find Which Elements To Remove
         verify(mockListOfIndividuals, atLeast(1)).get(anyInt());
     }
+
 }

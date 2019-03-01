@@ -12,26 +12,34 @@ public class NQueensIndividualTests {
     private Integer[] validArray;
 
     @Before
-    public void setUp() {
+    public void setup() {
         invalidLengthArray = new Integer[]{0, 1};
         invalidArrayValues = new Integer[]{9, 9, 9, 9, 9, 9};
         validArray = new Integer[]{0, 1, 2, 3,};
     }
 
+    ////////////////////////
+    // Parameter Checking //
+    ////////////////////////
+
     @Test(expected = IllegalArgumentException.class)
     public void constructorBoardIsNull() {
-        NQueensIndividual testObject = new NQueensIndividual(null);
+        new NQueensIndividual(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorBoardIsInvalidLength() {
-        NQueensIndividual testObject = new NQueensIndividual(invalidLengthArray);
+        new NQueensIndividual(invalidLengthArray);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorBoardIsInvalidArrayValues() {
-        NQueensIndividual testObject = new NQueensIndividual(invalidArrayValues);
+        new NQueensIndividual(invalidArrayValues);
     }
+
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void toStringCorrectStringGenerated() {

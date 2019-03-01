@@ -18,7 +18,7 @@ public class RandomTextHelperTests {
     private String validCharacters;
 
     @Before
-    public void setUp() {
+    public void setup() {
         validCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
 
         mockRandom = Mockito.mock(Random.class);
@@ -59,9 +59,9 @@ public class RandomTextHelperTests {
         testObject.generateString(0);
     }
 
-    ///////////////////
-    // Check Methods //
-    ///////////////////
+    ////////////////////
+    // Method Testing //
+    ////////////////////
 
     @Test
     public void generateCharVerifyRandomUsed() {
