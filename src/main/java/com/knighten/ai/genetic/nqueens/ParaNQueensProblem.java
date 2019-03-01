@@ -37,6 +37,13 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      * @param n number of queens/board size
      */
     public ParaNQueensProblem(int n, Random random) {
+
+        if(n <= 3)
+            throw new IllegalArgumentException("N Must Be Greater Than 3");
+
+        if(random == null)
+            throw new IllegalArgumentException("Random Object Cannot Be Null");
+
         this.n = n;
         this.random = random;
     }
@@ -160,9 +167,13 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
                     double[] mutationChance = this.random.doubles(this.n).toArray();
                     int[] randQueenPositions = this.random.ints(this.n, 0, this.n).toArray();
 
+                    Integer[] genes = individual.getGenes();
+
                     IntStream.range(0, this.n)
                             .filter((i) -> mutationChance[i] < mutationProb)
-                            .forEach((column) -> individual.getGenes()[column] = randQueenPositions[column]);
+                            .forEach((column) -> genes[column] = randQueenPositions[column]);
+
+                    individual.setGenes(genes);
                 });
     }
 

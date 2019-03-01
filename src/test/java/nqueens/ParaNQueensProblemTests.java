@@ -1,8 +1,8 @@
 package nqueens;
 
-
 import com.knighten.ai.genetic.nqueens.NQueensIndividual;
 import com.knighten.ai.genetic.nqueens.NQueensProblem;
+import com.knighten.ai.genetic.nqueens.ParaNQueensProblem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-public class NQueensProblemTests {
+public class ParaNQueensProblemTests {
 
     private Random mockRandom;
     private List<NQueensIndividual> listOfMockIndividuals;
@@ -67,21 +68,17 @@ public class NQueensProblemTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorNullRandom() {
-        new NQueensProblem(4, null);
+        new ParaNQueensProblem(4, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorNLessThan4() {
-        new NQueensProblem(3, mockRandom);
+        new ParaNQueensProblem(3, mockRandom);
     }
-
-    ////////////////////
-    // Method Testing //
-    ////////////////////
 
     @Test
     public void generateInitialPopulationCorrectSizeReturned() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         List<NQueensIndividual> result = testObject.generateInitialPopulation(4);
 
         Assert.assertEquals(4, result.size());
@@ -89,7 +86,7 @@ public class NQueensProblemTests {
 
     @Test
     public void calculateFitnessVerifyCorrectFitnessScoreAndCorrectUseOfIndividualsGenes() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         testObject.calculateFitness(listOfMockIndividuals);
 
         verify(mockIndividual0000, times(1)).getGenes();
@@ -100,7 +97,7 @@ public class NQueensProblemTests {
 
     @Test
     public void getBestIndividualCorrectIndividualRetrieved() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         NQueensIndividual results = testObject.getBestIndividual(listOfMockIndividuals);
 
         Assert.assertEquals(mockIndividual1302, results);
@@ -108,7 +105,7 @@ public class NQueensProblemTests {
 
     @Test
     public void selectionReturnsTheCorrectNumberOfIndividuals() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         List<NQueensIndividual> results = testObject.selection(listOfMockIndividuals, .50);
 
         // 50% Of Array Size Returned
@@ -120,7 +117,7 @@ public class NQueensProblemTests {
 
     @Test
     public void selectionPopulationsGetCalledCorrectNumberOfTimes() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         List<NQueensIndividual> results = testObject.selection(mockListOfIndividuals, .50);
 
         // Only One Element Should Be Returned, But May Need To Scan List To Find Which Elements To Remove
@@ -129,7 +126,7 @@ public class NQueensProblemTests {
 
     @Test
     public void crossoverEnsureCorrectNumberOfIndividualsUsed() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         List<NQueensIndividual> results = testObject.crossover(mockListOfIndividuals, 2);
 
         // We Must Get 4 Individuals Total From Supplied Subpopulation
@@ -138,7 +135,7 @@ public class NQueensProblemTests {
 
     @Test
     public void crossoverEnsureCorrectGenesAreUsed() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         List<NQueensIndividual> results = testObject.crossover(listOfMockIndividuals, 2);
 
         // Results Dependent On mockRandom
@@ -148,7 +145,7 @@ public class NQueensProblemTests {
 
     @Test
     public void crossoverEnsureNewIndividualsGenesAreCorrect() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         List<NQueensIndividual> results = testObject.crossover(listOfMockIndividuals, 2);
 
         // Correct Population Size Generated
@@ -162,7 +159,7 @@ public class NQueensProblemTests {
 
     @Test
     public void mutateEnsureCorrectIndividualsGenesAreUsed() {
-        NQueensProblem testObject = new NQueensProblem(4, mockRandom);
+        ParaNQueensProblem testObject = new ParaNQueensProblem(4, mockRandom);
         testObject.mutate(listOfMockIndividuals, .05);
 
         // Results Dependent On mockRandom And listOfMockIndividuals
