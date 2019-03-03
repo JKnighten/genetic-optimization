@@ -83,7 +83,7 @@ List<Individual> optimizationGeneration = optimizer.optimize();
 A couple of example optimization problems have been implemented and packaged with this framework. Demo runs can be found
 in their associated IGenOptimizeProblem class.
 
-Also here is a small writeup about the steps followed to create a problem class - [link](https://github.com/JKnighten/genetic-optimization/wiki/Example:-Creating-An-Optimization-Problem).
+Also here is a small writeup about the steps followed to create a problem class - [link](https://github.com/JKnighten/genetic-optimization/wiki/Example:-Creating-An-Optimization-Problem-For-The-Genetic-Optimizer).
 
 ### String Matching
 
