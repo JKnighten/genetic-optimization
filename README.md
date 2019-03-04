@@ -105,9 +105,8 @@ size is large or if N is large.
 ### Minimizing/Maximizing A One Variable Real Valued Function
 
 Given an one variable real valued function(R->R ex. f(x)=x, f(x)=x^2, f(x)=log(x)) find the maximum/minimum of the
-function. You could use this to minimize/maximize a simple function or something more complicated like a loss function
-for a machine learning model.
-
+function. You could use this to minimize/maximize a simple function or extend the code to optimize something more 
+complicated like a loss function for a machine learning model.
 
 ## Possible Future Work
 

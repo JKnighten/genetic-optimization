@@ -22,6 +22,7 @@ public class RandomTextHelper {
      * Creates a RandomTextHelper object that uses the supplied Random object.
      *
      * @param random object used to generate random numbers
+     * @param validChars string of valid characters to generate
      */
     public RandomTextHelper(Random random, String validChars) {
         if(random == null)

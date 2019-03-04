@@ -38,6 +38,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      *
      * @param targetString the string trying to be found by the genetic algorithm
      * @param random object used to generate random numbers for the problem
+     * @param textHelper object used to generate valid random characters and strings
      */
     public StringMatchProblem(String targetString, Random random, RandomTextHelper textHelper) {
 

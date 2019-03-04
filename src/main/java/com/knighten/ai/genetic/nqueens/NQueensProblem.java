@@ -33,6 +33,7 @@ public class NQueensProblem extends BaseNQueensProblem {
      * Creates a instance of NQueensProblem using the specified value of n.
      *
      * @param n number of queens/board size
+     * @param random object used to generate random numbers
      */
     public NQueensProblem(int n, Random random) {
 

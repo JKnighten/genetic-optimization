@@ -35,6 +35,7 @@ public class ParaNQueensProblem extends BaseNQueensProblem {
      * Creates a instance of ParaNQueensProblem using the specified value of n.
      *
      * @param n number of queens/board size
+     * @param random object used to generate random numbers
      */
     public ParaNQueensProblem(int n, Random random) {
 
