@@ -2,7 +2,7 @@ package com.knighten.ai.genetic.nqueens;
 
 import com.knighten.ai.genetic.interfaces.IGenOptimizeProblem;
 
-public abstract class BaseNQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
+public abstract class AbstractNQueensProblem implements IGenOptimizeProblem<NQueensIndividual> {
 
     /**
      * Returns the number of conflicts on the board.
@@ -15,25 +15,25 @@ public abstract class BaseNQueensProblem implements IGenOptimizeProblem<NQueensI
         Integer[] board = individual.getGenes();
         int score = 0;
 
-        for(int queen = 0; queen < board.length; queen++) {
+        for (int queen = 0; queen < board.length; queen++) {
             // Iterate Over Every Queen To The Right Of The Queen Currently Being Evaluated
-            for(int remainingQueen=queen+1; remainingQueen<board.length; remainingQueen++){
+            for (int remainingQueen = queen + 1; remainingQueen < board.length; remainingQueen++) {
 
                 // Row Conflict
-                if(board[queen].compareTo(board[remainingQueen]) == 0 ) {
+                if (board[queen].compareTo(board[remainingQueen]) == 0) {
                     score++;
                     continue;
                 }
 
                 // Diagonal(Upper or Lower) Conflict
-                if(Math.abs(board[queen]-board[remainingQueen]) == Math.abs(queen-remainingQueen)) {
+                if (Math.abs(board[queen] - board[remainingQueen]) == Math.abs(queen - remainingQueen)) {
                     score++;
                     continue;
                 }
             }
         }
 
-        return  score;
+        return score;
     }
 
 }

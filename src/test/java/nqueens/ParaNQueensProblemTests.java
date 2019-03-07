@@ -32,7 +32,7 @@ public class ParaNQueensProblemTests {
                 .thenReturn(IntStream.range(0, 4))
                 .thenReturn(IntStream.range(0, 4))
                 .thenReturn(IntStream.range(0, 4));
-        Mockito.when(mockRandom.ints(2*2, 0, 2))
+        Mockito.when(mockRandom.ints(2 * 2, 0, 2))
                 .thenReturn(Arrays.stream(new int[]{0, 0, 1, 0}));
         Mockito.when(mockRandom.ints(2, 0, 4))
                 .thenReturn(Arrays.stream(new int[]{1, 2}));

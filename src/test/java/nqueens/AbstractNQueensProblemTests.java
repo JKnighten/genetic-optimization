@@ -1,6 +1,6 @@
 package nqueens;
 
-import com.knighten.ai.genetic.nqueens.BaseNQueensProblem;
+import com.knighten.ai.genetic.nqueens.AbstractNQueensProblem;
 import com.knighten.ai.genetic.nqueens.NQueensIndividual;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,9 +10,9 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class BaseNQueensProblemTests {
+public class AbstractNQueensProblemTests {
 
-    private BaseNQueensProblem testBaseNQueensProblem;
+    private AbstractNQueensProblem testAbstractNQueensProblem;
     private NQueensIndividual mockIndividual1;
     private NQueensIndividual mockIndividual2;
     private NQueensIndividual mockIndividual3;
@@ -20,7 +20,7 @@ public class BaseNQueensProblemTests {
     @Before
     public void setup() {
         // Most Mock The Test Class Since It Is Abstract
-        testBaseNQueensProblem = Mockito.mock(BaseNQueensProblem.class, Mockito.CALLS_REAL_METHODS);
+        testAbstractNQueensProblem = Mockito.mock(AbstractNQueensProblem.class, Mockito.CALLS_REAL_METHODS);
 
         mockIndividual1 = Mockito.mock(NQueensIndividual.class);
         Mockito.when(mockIndividual1.getGenes())
@@ -41,9 +41,9 @@ public class BaseNQueensProblemTests {
 
     @Test
     public void conflictScoreVerifyGenesUsed() {
-        int score = testBaseNQueensProblem.conflictScore(mockIndividual1);
-        int score2 = testBaseNQueensProblem.conflictScore(mockIndividual2);
-        int score3 = testBaseNQueensProblem.conflictScore(mockIndividual3);
+        int score = testAbstractNQueensProblem.conflictScore(mockIndividual1);
+        int score2 = testAbstractNQueensProblem.conflictScore(mockIndividual2);
+        int score3 = testAbstractNQueensProblem.conflictScore(mockIndividual3);
 
         verify(mockIndividual1, times(1)).getGenes();
         Assert.assertEquals(0, score);

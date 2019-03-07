@@ -19,13 +19,13 @@ public class NQueensIndividual extends Individual<Integer[]> {
      */
     public NQueensIndividual(Integer[] board) {
 
-        if(board == null)
+        if (board == null)
             throw new IllegalArgumentException("NQueens Boards Cannot Be Null");
 
-        if(board.length <= 3)
+        if (board.length <= 3)
             throw new IllegalArgumentException("NQueens Boards Are Only Solvable When N Is Greater Than 3");
 
-        if(IntStream.range(0, board.length).anyMatch((i) -> board[i] < 0 || board[i] >= board.length))
+        if (IntStream.range(0, board.length).anyMatch((i) -> board[i] < 0 || board[i] >= board.length))
             throw new IllegalArgumentException("Values On The Board Must Be Between 0 And N-1");
 
         this.setGenes(board);
@@ -42,12 +42,12 @@ public class NQueensIndividual extends Individual<Integer[]> {
         StringBuilder sb = new StringBuilder();
         Integer[] board = this.getGenes();
 
-        for(int row = 0; row < board.length; row++) {
+        for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board.length; column++)
                 sb.append((board[column] == row) ? "Q " : "* ");
 
             // Start New Row
-            if(row != (board.length-1))
+            if (row != (board.length - 1))
                 sb.append("\n");
         }
 
