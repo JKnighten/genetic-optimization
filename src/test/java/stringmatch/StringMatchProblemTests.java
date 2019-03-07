@@ -27,7 +27,7 @@ public class StringMatchProblemTests {
     @Before
     public void setUp() {
         mockRandom = Mockito.mock(Random.class);
-        Mockito.when(mockRandom.ints(2*2, 0, 2))
+        Mockito.when(mockRandom.ints(2 * 2, 0, 2))
                 .thenReturn(Arrays.stream(new int[]{0, 0, 1, 0}));
         Mockito.when(mockRandom.ints(2, 0, 4))
                 .thenReturn(Arrays.stream(new int[]{1, 2}));

@@ -22,14 +22,13 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      */
     private String targetString;
 
-
     /**
-     *  Used to generate random numbers. Allows the use of a seed.
+     * Used to generate random numbers. Allows the use of a seed.
      */
     private Random random;
 
     /**
-     *  Used to generate text data that is valid in the problem.
+     * Used to generate text data that is valid in the problem.
      */
     private RandomTextHelper textHelper;
 
@@ -37,21 +36,21 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      * Creates a instance of StringMatchProblem containing the target string trying to be obtained.
      *
      * @param targetString the string trying to be found by the genetic algorithm
-     * @param random object used to generate random numbers for the problem
-     * @param textHelper object used to generate valid random characters and strings
+     * @param random       object used to generate random numbers for the problem
+     * @param textHelper   object used to generate valid random characters and strings
      */
     public StringMatchProblem(String targetString, Random random, RandomTextHelper textHelper) {
 
-        if(targetString == null)
+        if (targetString == null)
             throw new IllegalArgumentException("Target String Cannot Be Null");
 
-        if(targetString.isEmpty())
+        if (targetString.isEmpty())
             throw new IllegalArgumentException("Target Cannot Be Empty");
 
-        if(random == null)
+        if (random == null)
             throw new IllegalArgumentException("Random Object Cannot Be Null");
 
-        if(textHelper == null)
+        if (textHelper == null)
             throw new IllegalArgumentException("RandomTExtHelper Object Cannot Be Null");
 
         this.targetString = targetString;
@@ -115,15 +114,15 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      * Selects the selectionPercent percent of best StringIndividuals in the population. The best StringIndividuals are
      * the ones with the lowest fitness score, which are those closest to the target string.
      *
-     * @param population the population that is the sub-population is selected from
+     * @param population       the population that is the sub-population is selected from
      * @param selectionPercent the percent of best individuals to keep
      * @return the sub-population of best StringIndividuals
      */
     @Override
     public List<StringIndividual> selection(List<StringIndividual> population, double selectionPercent) {
-        int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
+        int amountToRemove = (int) Math.floor((1 - selectionPercent) * population.size());
 
-        return IntStream.rangeClosed(0, population.size()-amountToRemove-1)
+        return IntStream.rangeClosed(0, population.size() - amountToRemove - 1)
                 .mapToObj(population::get)
                 .collect(Collectors.toList());
     }
@@ -133,7 +132,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      * StringIndividuals are randomly selected, then portions of their strings(genes) are swapped to create a new
      * StringIndividual.
      *
-     * @param subPopulation the sub-population used to generate the new population
+     * @param subPopulation  the sub-population used to generate the new population
      * @param populationSize the desired population size to be returned
      * @return the new population of StringIndividual created from the sub-population
      */
@@ -142,18 +141,18 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
 
         // Select Random Individuals To Cross With Each Other
         // We Select 2 Times The Desired Population Size To Create Pairs
-        List<StringIndividual> individuals = this.random.ints(populationSize*2,0, subPopulation.size())
+        List<StringIndividual> individuals = this.random.ints(populationSize * 2, 0, subPopulation.size())
                 .mapToObj(subPopulation::get)
                 .collect(Collectors.toList());
 
         // For Each Pair We Pick A Split Point To Separate Their Genes
-        int[] splitPoints = this.random.ints(populationSize,0, targetString.length()).toArray();
+        int[] splitPoints = this.random.ints(populationSize, 0, targetString.length()).toArray();
 
         // Create The New StringIndividuals
         return IntStream.range(0, populationSize)
                 .mapToObj((i) -> {
                     String gene1Contribution = individuals.get(i).getGenes().substring(0, splitPoints[i]);
-                    String gene2Contribution = individuals.get(i+populationSize).getGenes().substring(splitPoints[i]);
+                    String gene2Contribution = individuals.get(i + populationSize).getGenes().substring(splitPoints[i]);
                     return gene1Contribution + gene2Contribution;
                 })
                 .map(StringIndividual::new)
@@ -165,7 +164,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
      * StringIndividual's string will be mutated. If a character is selected for mutation then that character is
      * replaced by a randomly selected character.
      *
-     * @param population the population that will be mutated
+     * @param population   the population that will be mutated
      * @param mutationProb the probability that a gene of an individual is mutated
      */
     @Override
@@ -190,7 +189,7 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
     public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 2000,.2, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 2000, .2, .01);
         params.setTargetValue(0.0);
 
         String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
@@ -206,14 +205,14 @@ public class StringMatchProblem implements IGenOptimizeProblem<StringIndividual>
         List<Individual> optimizationGenerations = optimizer.optimize();
         long endTime = System.nanoTime();
 
-        double duration = (endTime - startTime)/1000000.0;
+        double duration = (endTime - startTime) / 1000000.0;
 
         // Print Results
-        for(int i=1; i<optimizationGenerations.size(); i++) {
-            if(optimizationGenerations.get(i).getFitness() < optimizationGenerations.get(i-1).getFitness() ){
+        for (int i = 1; i < optimizationGenerations.size(); i++) {
+            if (optimizationGenerations.get(i).getFitness() < optimizationGenerations.get(i - 1).getFitness()) {
                 String individualString = optimizationGenerations.get(i).toString();
                 double fitness = optimizationGenerations.get(i).getFitness();
-                System.out.println("Generation " + i + ": - Score " + fitness + "\n" + individualString );
+                System.out.println("Generation " + i + ": - Score " + fitness + "\n" + individualString);
             }
         }
 

@@ -12,12 +12,12 @@ public class StringIndividual extends Individual<String> {
      *
      * @param stringValue the string contained in the individual
      */
-    public StringIndividual(String stringValue){
+    public StringIndividual(String stringValue) {
 
-        if(stringValue == null)
+        if (stringValue == null)
             throw new IllegalArgumentException("A StringIndividual's Genes Cannot Be Null");
 
-        if(stringValue.isEmpty())
+        if (stringValue.isEmpty())
             throw new IllegalArgumentException("A StringIndividual's Genes Cannot Be Empty");
 
         this.setGenes(stringValue);
@@ -30,6 +30,8 @@ public class StringIndividual extends Individual<String> {
      * @return the individuals value
      */
     @Override
-    public String toString(){ return this.getGenes(); }
+    public String toString() {
+        return this.getGenes();
+    }
 
 }
