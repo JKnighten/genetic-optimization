@@ -96,7 +96,7 @@ public class GeneticOptimizationTests {
 
     @Test
     public void nQueensRun() {
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,5000, .05, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 5000, .05, .01);
         params.setTargetValue(0.0);
 
         IGenOptimizeProblem problem = new NQueensProblem(6, new Random(123));
@@ -104,14 +104,14 @@ public class GeneticOptimizationTests {
 
         List<Individual> optimizationGeneration = optimizer.optimize();
 
-        Individual optimized = optimizationGeneration.get(optimizationGeneration.size()-1);
+        Individual optimized = optimizationGeneration.get(optimizationGeneration.size() - 1);
 
         Assert.assertEquals(0.0, optimized.getFitness(), 0.000000001);
     }
 
     @Test
     public void realValueOneVarFunctionMinimizeRun() {
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,10000, .15, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 10000, .15, .01);
         params.setTargetValue(0.0);
 
         IGenOptimizeProblem problem = new MinimizeOneVar(-10.0,
@@ -122,14 +122,14 @@ public class GeneticOptimizationTests {
 
         List<Individual> optimizationGeneration = optimizer.optimize();
 
-        Individual optimized = optimizationGeneration.get(optimizationGeneration.size()-1);
+        Individual optimized = optimizationGeneration.get(optimizationGeneration.size() - 1);
 
         Assert.assertEquals(0.0, optimized.getFitness(), 0.01);
     }
 
     @Test
     public void realValueOneVarFunctionMaximizeRun() {
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,10000, .15, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 10000, .15, .01);
         params.setTargetValue(0.0);
 
         IGenOptimizeProblem problem = new MaximizeOneVar(-10.0,
@@ -140,14 +140,14 @@ public class GeneticOptimizationTests {
 
         List<Individual> optimizationGeneration = optimizer.optimize();
 
-        Individual optimized = optimizationGeneration.get(optimizationGeneration.size()-1);
+        Individual optimized = optimizationGeneration.get(optimizationGeneration.size() - 1);
 
         Assert.assertEquals(100.0, optimized.getFitness(), 0.01);
     }
 
     @Test
     public void stringMatchRun() {
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 2000,.2, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 2000, .2, .01);
         params.setTargetValue(0.0);
 
         String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
@@ -159,7 +159,7 @@ public class GeneticOptimizationTests {
 
         List<Individual> optimizationGenerations = optimizer.optimize();
 
-        Individual optimized = optimizationGenerations.get(optimizationGenerations.size()-1);
+        Individual optimized = optimizationGenerations.get(optimizationGenerations.size() - 1);
 
         Assert.assertEquals(0.0, optimized.getFitness(), 0.000001);
     }

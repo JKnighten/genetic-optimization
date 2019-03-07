@@ -25,14 +25,14 @@ public class GeneticOptimization {
      * Creates and instance of GeneticOptimization solving the supplied problems using the supplied parameters.
      *
      * @param problem the problem to be optimized
-     * @param params optimization parameters
+     * @param params  optimization parameters
      */
     public GeneticOptimization(IGenOptimizeProblem problem, GeneticOptimizationParams params) {
 
-        if(problem == null)
+        if (problem == null)
             throw new IllegalArgumentException("The Problem Object Cannot Be null");
 
-        if(params == null)
+        if (params == null)
             throw new IllegalArgumentException("Optimization Parameters Cannot Be null");
 
         this.problem = problem;
@@ -44,7 +44,7 @@ public class GeneticOptimization {
      *
      * @return a list of each top individual in each generation
      */
-    public List<Individual> optimize(){
+    public List<Individual> optimize() {
         List<Individual> bestInGenerations = new ArrayList<>();
 
         List<Individual> population = problem.generateInitialPopulation(params.getPopulationSize());
@@ -52,7 +52,7 @@ public class GeneticOptimization {
         bestInGenerations.add(problem.getBestIndividual(population));
 
         // Start Generations
-        while(bestInGenerations.size()-1 != params.getMaxGenerations()){
+        while (bestInGenerations.size() - 1 != params.getMaxGenerations()) {
             List<Individual> selectedPopulation = problem.selection(population, params.getSelectionPercent());
             List<Individual> crossedPopulation = problem.crossover(selectedPopulation, params.getPopulationSize());
             problem.mutate(crossedPopulation, params.getMutationProb());
@@ -61,7 +61,7 @@ public class GeneticOptimization {
 
             population = crossedPopulation;
 
-            if(bestInGenerations.get(bestInGenerations.size()-1).getFitness() == params.getTargetValue())
+            if (bestInGenerations.get(bestInGenerations.size() - 1).getFitness() == params.getTargetValue())
                 return bestInGenerations;
         }
 

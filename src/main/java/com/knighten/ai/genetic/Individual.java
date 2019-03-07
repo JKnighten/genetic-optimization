@@ -34,7 +34,7 @@ public class Individual<V> implements Comparable<Individual> {
     public void setFitness(double fitness) {
 
         // Catch NaN Or Infinity
-        if(!Double.isFinite(fitness))
+        if (!Double.isFinite(fitness))
             throw new IllegalArgumentException("Fitness Cannot Be NaN or Infinite: " + genes + " was found");
 
         this.fitness = fitness;
@@ -46,22 +46,22 @@ public class Individual<V> implements Comparable<Individual> {
      *
      * @return the individual's value
      */
-     public V getGenes() {
-         return this.genes;
-     }
+    public V getGenes() {
+        return this.genes;
+    }
 
     /**
      * Assigns a value to the individual's genes.
      *
      * @param genes the individual's genes
      */
-     public void setGenes(V genes) {
+    public void setGenes(V genes) {
 
-         if(genes == null)
-             throw new IllegalArgumentException("Genes Cannot Be Null");
+        if (genes == null)
+            throw new IllegalArgumentException("Genes Cannot Be Null");
 
-         this.genes = genes;
-     }
+        this.genes = genes;
+    }
 
     /**
      * Compares the current individual to another individual. Sorts individuals in ascending order by fitness score.
@@ -72,9 +72,9 @@ public class Individual<V> implements Comparable<Individual> {
     @Override
     public int compareTo(Individual otherIndividual) {
 
-        if(this.fitness > otherIndividual.getFitness())
+        if (this.fitness > otherIndividual.getFitness())
             return 1;
-        else if(this.fitness < otherIndividual.getFitness())
+        else if (this.fitness < otherIndividual.getFitness())
             return -1;
 
         return 0;

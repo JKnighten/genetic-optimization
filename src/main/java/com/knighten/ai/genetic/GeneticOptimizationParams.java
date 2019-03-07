@@ -32,28 +32,27 @@ public class GeneticOptimizationParams {
      */
     private double targetValue = Double.MAX_VALUE;
 
-
     /**
      * Creates an instance of GeneticOptimizationParams using the supplied optimization parameters.
      *
-     * @param populationSize the size of population of individuals
-     * @param maxGenerations the maximum number of generations created
+     * @param populationSize   the size of population of individuals
+     * @param maxGenerations   the maximum number of generations created
      * @param selectionPercent percentage of best individuals kept during selection
-     * @param mutationProb probability a gene is mutated
+     * @param mutationProb     probability a gene is mutated
      */
-    public GeneticOptimizationParams(int populationSize, int maxGenerations , double selectionPercent,
+    public GeneticOptimizationParams(int populationSize, int maxGenerations, double selectionPercent,
                                      double mutationProb) {
 
-        if(populationSize < 1)
+        if (populationSize < 1)
             throw new IllegalArgumentException("Population Size Must Be Greater Than Zero");
 
-        if(maxGenerations < 1)
+        if (maxGenerations < 1)
             throw new IllegalArgumentException("Max Generations Must Be Greater Than Zero");
 
-        if(selectionPercent <= 0.0 || selectionPercent > 1.0)
+        if (selectionPercent <= 0.0 || selectionPercent > 1.0)
             throw new IllegalArgumentException("Selection Percentage Must Be Greater Than Zero");
 
-        if(mutationProb < 0.0 || mutationProb > 1.0)
+        if (mutationProb < 0.0 || mutationProb > 1.0)
             throw new IllegalArgumentException("Mutation Probability Must Be Greater Than Or Equal To Zero");
 
         this.populationSize = populationSize;
@@ -114,7 +113,7 @@ public class GeneticOptimizationParams {
      */
     public void setTargetValue(double targetValue) {
 
-        if(!Double.isFinite(targetValue))
+        if (!Double.isFinite(targetValue))
             throw new IllegalArgumentException("Target Value Cannot Be NaN Or Infinite");
 
         this.targetValue = targetValue;
