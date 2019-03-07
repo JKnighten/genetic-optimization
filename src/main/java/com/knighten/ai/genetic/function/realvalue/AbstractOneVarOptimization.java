@@ -13,10 +13,10 @@ import java.util.stream.IntStream;
  * necessary methods to perform maximization or minimization. To use only getBestIndividual() and selection() need to
  * be implemented to reflect the type of optimization to perform(minimization or maximization).
  */
-public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndividual> {
+public abstract class AbstractOneVarOptimization implements IGenOptimizeProblem<OneVarIndividual> {
 
     /**
-     *  Used to generate random numbers. Allows the use of a seed.
+     * Used to generate random numbers. Allows the use of a seed.
      */
     private Random random;
 
@@ -36,7 +36,7 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
     private IOneVariableFunction function;
 
     /**
-     *  Sets the Random object used to generate random numbers.
+     * Sets the Random object used to generate random numbers.
      *
      * @param random the Random object to use
      */
@@ -52,15 +52,15 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
     public void setMinDomain(double minDomain) {
 
         // Catch NaN Or Infinity
-        if(!Double.isFinite(minDomain))
+        if (!Double.isFinite(minDomain))
             throw new IllegalArgumentException("minDomain Cannot Be NaN or Infinite: " + minDomain + " was found");
 
         // Catch Double.MIN_VALUE
-        if(minDomain == Double.MIN_VALUE)
+        if (minDomain == Double.MIN_VALUE)
             throw new IllegalArgumentException("minDomain Cannot Double.MIN_VALUE");
 
         // Catch Double.MAX_VALUE
-        if(minDomain == Double.MAX_VALUE)
+        if (minDomain == Double.MAX_VALUE)
             throw new IllegalArgumentException("minDomain Cannot Double.MAX_VALUE");
 
         this.minDomain = minDomain;
@@ -74,15 +74,15 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
     public void setMaxDomain(double maxDomain) {
 
         // Catch NaN Or Infinity
-        if(!Double.isFinite(maxDomain))
+        if (!Double.isFinite(maxDomain))
             throw new IllegalArgumentException("maxDomain Cannot Be NaN or Infinite: " + maxDomain + " was found");
 
         // Catch Double._VALUE
-        if(maxDomain == Double.MIN_VALUE)
+        if (maxDomain == Double.MIN_VALUE)
             throw new IllegalArgumentException("maxDomain Cannot Double.MIN_VALUE");
 
         // Catch Double.MAX_VALUE
-        if(maxDomain == Double.MAX_VALUE)
+        if (maxDomain == Double.MAX_VALUE)
             throw new IllegalArgumentException("maxDomain Cannot Double.MAX_VALUE");
 
 
@@ -97,7 +97,7 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
     public void setFunction(IOneVariableFunction function) {
 
         // Catch Null
-        if(function == null)
+        if (function == null)
             throw new IllegalArgumentException("function Cannot Be Null");
 
 
@@ -118,7 +118,7 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      * Select individuals in the population that will be used to generate next generation's population. The set of
      * individuals whose x values create the smallest/highest function outputs.
      *
-     * @param population the population that the sub-population is selected from
+     * @param population       the population that the sub-population is selected from
      * @param selectionPercent the percent of best individuals to keep
      * @return the sub-population selected from the population
      */
@@ -156,18 +156,18 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      * Uses the provided sub-population to generate the next generation's population. Random guesses of x values are
      * selected and crossed. Values are crossed by taking the average of their x values.
      *
-     * @param subPopulation the sub-population used to generate the new population
+     * @param subPopulation  the sub-population used to generate the new population
      * @param populationSize the desired population size to be returned
      * @return population created from crossing the individuals in the sub-population
      */
     @Override
     public List<OneVarIndividual> crossover(List<OneVarIndividual> subPopulation, int populationSize) {
-        double[] genes= this.random.ints(populationSize*2,0, subPopulation.size())
+        double[] genes = this.random.ints(populationSize * 2, 0, subPopulation.size())
                 .mapToDouble(i -> subPopulation.get(i).getGenes())
                 .toArray();
 
         return IntStream.range(0, populationSize)
-                .mapToDouble(i -> (genes[i] + genes[i+populationSize])/2)
+                .mapToDouble(i -> (genes[i] + genes[i + populationSize]) / 2)
                 .mapToObj(OneVarIndividual::new)
                 .collect(Collectors.toList());
     }
@@ -176,7 +176,7 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
      * Randomly mutate individuals in the supplied population. We select random OneVarIndividuals and change their x
      * values. Note: this will change the genes of the individuals in the supplied population.
      *
-     * @param population the population that will be mutated
+     * @param population   the population that will be mutated
      * @param mutationProb the probability that a gene of an individual is mutated
      */
     @Override
@@ -188,4 +188,5 @@ public abstract class OptimizeOneVar implements IGenOptimizeProblem<OneVarIndivi
                 .filter(i -> randomMut[i] < mutationProb)
                 .forEach(i -> population.get(i).setGenes(randomX[i]));
     }
+
 }

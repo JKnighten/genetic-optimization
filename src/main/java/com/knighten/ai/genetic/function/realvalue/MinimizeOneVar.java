@@ -13,15 +13,15 @@ import java.util.stream.IntStream;
 /**
  * Class for minimizing a one variable real valued function when using the genetic optimization algorithm.
  */
-public class MinimizeOneVar extends OptimizeOneVar {
+public class MinimizeOneVar extends AbstractOneVarOptimization {
 
     /**
      * Creates a object used to minimize a one variable real valued function.
      *
      * @param minDomain the smallest x value in search
      * @param maxDomain the largest x value in search
-     * @param function the function being maximized
-     * @param random random object used for all random number generation
+     * @param function  the function being maximized
+     * @param random    random object used for all random number generation
      */
     public MinimizeOneVar(double minDomain, double maxDomain, IOneVariableFunction function, Random random) {
         this.setMinDomain(minDomain);
@@ -47,15 +47,15 @@ public class MinimizeOneVar extends OptimizeOneVar {
      * Select individuals in the population that will be used to generate next generation's population. We select the
      * the bottom selectionPercent percentage of OneVarIndividuals with the lowest fitness(lowest function value).
      *
-     * @param population the population that the sub-population is selected from
+     * @param population       the population that the sub-population is selected from
      * @param selectionPercent the percent of best individuals to keep
      * @return the sub-population selected from the population
      */
     @Override
     public List<OneVarIndividual> selection(List<OneVarIndividual> population, double selectionPercent) {
-        int amountToRemove = (int) Math.floor((1-selectionPercent) * population.size());
+        int amountToRemove = (int) Math.floor((1 - selectionPercent) * population.size());
 
-        return IntStream.rangeClosed(0, population.size()-amountToRemove-1)
+        return IntStream.rangeClosed(0, population.size() - amountToRemove - 1)
                 .mapToObj(population::get)
                 .collect(Collectors.toList());
     }
@@ -63,7 +63,7 @@ public class MinimizeOneVar extends OptimizeOneVar {
     public static void main(String[] args) {
 
         // Genetic Optimization Parameters //
-        GeneticOptimizationParams params = new GeneticOptimizationParams(1000,10000, .15, .01);
+        GeneticOptimizationParams params = new GeneticOptimizationParams(1000, 10000, .15, .01);
         params.setTargetValue(0.0);
 
         // Setup Problem //
@@ -77,15 +77,16 @@ public class MinimizeOneVar extends OptimizeOneVar {
         long startTime = System.nanoTime();
         List<Individual> optimizationGeneration = optimizer.optimize();
         long endTime = System.nanoTime();
-        double duration = (endTime - startTime)/1000000.0;
+        double duration = (endTime - startTime) / 1000000.0;
 
         // Print Results
         Individual initial = optimizationGeneration.get(0);
-        Individual optimized = optimizationGeneration.get(optimizationGeneration.size()-1);
+        Individual optimized = optimizationGeneration.get(optimizationGeneration.size() - 1);
         System.out.println("Generation " + 0 + ": \n" + initial.toString() + " Score - " + initial.getFitness());
         System.out.println("Generation " + optimizationGeneration.size() + ": \n" + optimized.toString() + " Score - "
                 + optimized.getFitness());
         System.out.println("Optimization Duration: " + duration + " ms");
         System.out.println("Generations: " + optimizationGeneration.size());
     }
+
 }
