@@ -2,7 +2,7 @@ package com.knighten.ai.genetic.function.realvalue;
 
 /**
  * A functional interface used to represent a real valued function with one variable.
- *
+ * <p>
  * Example Lambdas:
  * (x) arrow Math.pow(x, 2) - f(x)=x^2
  * (x) arrow Math.log(x) - f(x)=log(x)

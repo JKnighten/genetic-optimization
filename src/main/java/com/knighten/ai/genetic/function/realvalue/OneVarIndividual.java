@@ -5,9 +5,8 @@ import com.knighten.ai.genetic.Individual;
 /**
  * Represents an individual when optimizing a one variable real valued function. Contains a single x value that is a
  * guess at the x value that generates the optimal value.
- *
  */
-public class OneVarIndividual extends Individual<Double>{
+public class OneVarIndividual extends Individual<Double> {
 
     /**
      * Creates an OneVarIndividual and assign it an x value.
@@ -21,7 +20,7 @@ public class OneVarIndividual extends Individual<Double>{
     public void setGenes(double genes) {
 
         // Catch NaN Or Infinity
-        if(!Double.isFinite(genes))
+        if (!Double.isFinite(genes))
             throw new IllegalArgumentException("genes Cannot Be NaN or Infinite: " + genes + " was found");
 
         super.setGenes(genes);
@@ -36,4 +35,5 @@ public class OneVarIndividual extends Individual<Double>{
     public String toString() {
         return Double.toString(this.getGenes());
     }
+
 }
