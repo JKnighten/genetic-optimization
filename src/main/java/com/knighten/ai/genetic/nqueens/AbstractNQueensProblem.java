@@ -11,7 +11,6 @@ public abstract class AbstractNQueensProblem implements IGenOptimizeProblem<NQue
      * @return the number on conflicts on the board
      */
     public int conflictScore(NQueensIndividual individual) {
-        //TODO - Replace Using A Set
         Integer[] board = individual.getGenes();
         int score = 0;
 
